@@ -160,49 +160,6 @@ class HomeScreen extends HookConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          // color: Theme.of(context).colorScheme.primary,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
-              gap: 8,
-              activeColor: Colors.black,
-              iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.grey[100]!,
-              color: Colors.black,
-              tabs: const [
-                GButton(
-                  icon: FontAwesomeIcons.house,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: FontAwesomeIcons.heart,
-                  text: 'Likes',
-                ),
-                GButton(
-                  icon: FontAwesomeIcons.user,
-                  text: 'User',
-                ),
-              ],
-              selectedIndex: 1,
-              onTabChange: (index) {},
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
