@@ -10,3 +10,8 @@ AudioPlayer myAudio(MyAudioRef ref) {
 }
 
 final isPlayingProvider = StateProvider<bool>((ref) => false);
+
+final currentPosStream = StreamProvider<double>((ref) {
+  final audioPlayer = ref.watch(myAudioProvider);
+  return audioPlayer.positionStream.map((position) => position.inSeconds.toDouble());
+});

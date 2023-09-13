@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,8 @@ class PlayerScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    log('rebuild');
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -109,20 +113,29 @@ class PlayerScreen extends HookConsumerWidget {
               ),
             ),
             Expanded(
-              child: Container(
-                width: 300,
-                height: 100,
-                color: Colors.blue,
+              child: SizedBox(
+                height: 80,
                 child: Consumer(builder: (context, ref, child) {
-                  final audioProvider = ref.read(myAudioProvider);
-                  // audioProvider.positionStream.listen((event) {
-                  //   print('Current Position: ${event.inSeconds}');
-                  // });
-                  // audioProvider.playerStateStream.listen((event) {
-                  //   print('Current State: ${event.toString()}');
-                  // });
+                  final audioProvider = ref.watch(myAudioProvider);
+                  final currentPos = ref.watch(currentPosStream);
+                 return currentPos.when(data: (data){
+                   return Slider(
+                     value:data,
+                     min: 0.0,
+                     max: audioProvider.duration?.inSeconds.toDouble() ?? 100,
+                     onChanged: (value) {
+                       log(value as String);
+                       ref.read(myAudioProvider).seek(Duration(seconds: value.toInt()));
+                     },
+                   );
+                  }, error: (err, stack)
+                  =>
+                      Text('Error $err')
+                  ,
+                  loading: () =>
+                  const Text('loading')
+                  );
 
-                  return SizedBox();
                 }),
               ),
             ),
@@ -143,7 +156,7 @@ class PlayerScreen extends HookConsumerWidget {
                     final isPlaying = ref.watch(isPlayingProvider);
                     audioProvider.playerStateStream.listen((event) {
                       if(event == PlayerState(true, ProcessingState.completed)){
-                        print('done play');
+                        log('done play');
                         ref.read(isPlayingProvider.notifier).state = false;
 
                       }
@@ -157,7 +170,7 @@ class PlayerScreen extends HookConsumerWidget {
                         } else {
                           ref.read(isPlayingProvider.notifier).state = true;
                           await audioProvider.setUrl(urlMp3);
-                          await audioProvider.seek(const Duration(seconds: 110));
+                          // await audioProvider.seek(const Duration(seconds: 110));
                           await audioProvider.play();
                         }
                       },
@@ -171,14 +184,14 @@ class PlayerScreen extends HookConsumerWidget {
                                   color: Colors.white, size: 48))),
                     );
                   }),
-                  FaIcon(FontAwesomeIcons.forwardStep,
+                  const FaIcon(FontAwesomeIcons.forwardStep,
                       color: Colors.white, size: 32),
-                  FaIcon(FontAwesomeIcons.repeat,
+                  const FaIcon(FontAwesomeIcons.repeat,
                       color: Colors.white, size: 32),
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
           ],
