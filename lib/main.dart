@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reno_music/utils/app_router.dart';
 
@@ -14,7 +15,6 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
-
     return MaterialApp.router(
       routerConfig: goRouter,
       debugShowCheckedModeBanner: false,
@@ -24,6 +24,8 @@ class MyApp extends HookConsumerWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
+      ).copyWith(
+        textTheme: GoogleFonts.latoTextTheme(ThemeData(brightness: Brightness.light).textTheme),
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -31,8 +33,11 @@ class MyApp extends HookConsumerWidget {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
+      ).copyWith(
+        textTheme: GoogleFonts.latoTextTheme(ThemeData(brightness: Brightness.dark).textTheme),
       ),
       themeMode: ThemeMode.dark,
     );
   }
 }
+

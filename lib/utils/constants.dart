@@ -1,1 +1,2 @@
 const List<String> listTab = ['Home', 'Search', 'Notifications', 'Profile', 'Playlists'];
+const String urlMp3 = 'https://b2.renolation.com/file/music-reno/chillhop-beat-quotthousand-milesquot-113254.mp3';
