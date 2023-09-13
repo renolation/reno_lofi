@@ -4,9 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:reno_music/utils/app_router.dart';
 import 'package:reno_music/utils/constants.dart';
 
 class HomeScreen extends HookConsumerWidget {
@@ -77,9 +79,14 @@ class HomeScreen extends HookConsumerWidget {
             const SizedBox(
               height: 32,
             ),
-            Text(
-              'Browse',
-              style: Theme.of(context).textTheme.headlineMedium,
+            InkWell(
+              onTap: (){
+                context.pushNamed(AppRoute.player.name);
+              },
+              child: Text(
+                'Browse',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(
               height: 16,

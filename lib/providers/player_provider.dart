@@ -10,6 +10,8 @@ AudioPlayer myAudio(MyAudioRef ref) {
 }
 
 final isPlayingProvider = StateProvider<bool>((ref) => false);
+final isShuffleProvider = StateProvider<bool>((ref) => false);
+final isLoopProvider = StateProvider<LoopMode>((ref) => LoopMode.off);
 
 final currentPosStream = StreamProvider<double>((ref) {
   final audioPlayer = ref.watch(myAudioProvider);

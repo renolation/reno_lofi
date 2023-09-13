@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:reno_music/providers/player_provider.dart';
@@ -17,7 +18,6 @@ class PlayerScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     log('rebuild');
     return Scaffold(
       body: Padding(
@@ -32,18 +32,23 @@ class PlayerScreen extends HookConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                      color: const Color(0xff212123),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: const Center(
-                      child: FaIcon(
-                    FontAwesomeIcons.arrowLeft,
-                    color: Colors.white,
-                    size: 18,
-                  )),
+                InkWell(
+                  onTap: (){
+                    context.pop();
+                  },
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                        color: const Color(0xff212123),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: const Center(
+                        child: FaIcon(
+                      FontAwesomeIcons.arrowLeft,
+                      color: Colors.white,
+                      size: 18,
+                    )),
+                  ),
                 ),
                 Text(
                   'Now Playing',
@@ -118,28 +123,26 @@ class PlayerScreen extends HookConsumerWidget {
                 child: Consumer(builder: (context, ref, child) {
                   final audioProvider = ref.watch(myAudioProvider);
                   final currentPos = ref.watch(currentPosStream);
-                 return currentPos.when(data: (data){
-                   return Slider(
-                     value:data,
-                     min: 0.0,
-                     max: audioProvider.duration?.inSeconds.toDouble() ?? 100,
-                     onChanged: (value) {
-                       log(value as String);
-                       ref.read(myAudioProvider).seek(Duration(seconds: value.toInt()));
-                     },
-                   );
-                  }, error: (err, stack)
-                  =>
-                      Text('Error $err')
-                  ,
-                  loading: () =>
-                  const Text('loading')
-                  );
-
+                  return currentPos.when(
+                      data: (data) {
+                        return Slider(
+                          value: data,
+                          min: 0.0,
+                          max: audioProvider.duration?.inSeconds.toDouble() ??
+                              100,
+                          onChanged: (value) {
+                            log(value.toString());
+                            ref
+                                .read(myAudioProvider)
+                                .seek(Duration(seconds: value.toInt()));
+                          },
+                        );
+                      },
+                      error: (err, stack) => Text('Error $err'),
+                      loading: () => const Text('loading'));
                 }),
               ),
             ),
-
 
             SizedBox(
               height: 70,
@@ -147,23 +150,46 @@ class PlayerScreen extends HookConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const FaIcon(FontAwesomeIcons.shuffle,
-                      color: Colors.white, size: 32),
-                  const FaIcon(FontAwesomeIcons.backwardStep,
-                      color: Colors.white, size: 32),
+                  Consumer(builder: (context, ref, child) {
+                    final isShuffle = ref.watch(isShuffleProvider);
+                    return IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        if (isShuffle) {
+                          ref.read(isShuffleProvider.notifier).state = false;
+                          ref
+                              .read(myAudioProvider)
+                              .setShuffleModeEnabled(false);
+                        } else {
+                          ref.read(isShuffleProvider.notifier).state = true;
+                          ref.read(myAudioProvider).setShuffleModeEnabled(true);
+                        }
+                      },
+                      icon: FaIcon(FontAwesomeIcons.shuffle,
+                          color: isShuffle ? Colors.blue : Colors.white,
+                          size: 32),
+                    );
+                  }),
+                  IconButton(
+                    onPressed: () {
+                      ref.read(myAudioProvider).seekToPrevious();
+                    },
+                    icon: const FaIcon(FontAwesomeIcons.backwardStep,
+                        color: Colors.white, size: 32),
+                  ),
                   Consumer(builder: (context, ref, child) {
                     final audioProvider = ref.read(myAudioProvider);
                     final isPlaying = ref.watch(isPlayingProvider);
                     audioProvider.playerStateStream.listen((event) {
-                      if(event == PlayerState(true, ProcessingState.completed)){
+                      if (event ==
+                          PlayerState(true, ProcessingState.completed)) {
                         log('done play');
                         ref.read(isPlayingProvider.notifier).state = false;
-
                       }
                     });
-                    return  InkWell(
+                    return InkWell(
                       onTap: () async {
-                        if(isPlaying){
+                        if (isPlaying) {
                           ref.read(isPlayingProvider.notifier).state = false;
 
                           await audioProvider.pause();
@@ -180,14 +206,42 @@ class PlayerScreen extends HookConsumerWidget {
                           decoration: const BoxDecoration(
                               color: Colors.blue, shape: BoxShape.circle),
                           child: Center(
-                              child: FaIcon(isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-                                  color: Colors.white, size: 48))),
+                              child: FaIcon(
+                                  isPlaying
+                                      ? FontAwesomeIcons.pause
+                                      : FontAwesomeIcons.play,
+                                  color: Colors.white,
+                                  size: 48))),
                     );
                   }),
-                  const FaIcon(FontAwesomeIcons.forwardStep,
-                      color: Colors.white, size: 32),
-                  const FaIcon(FontAwesomeIcons.repeat,
-                      color: Colors.white, size: 32),
+                  IconButton(
+                    onPressed: () {
+                      ref.read(myAudioProvider).seekToNext();
+                    },
+                    icon: const FaIcon(FontAwesomeIcons.forwardStep,
+                        color: Colors.white, size: 32),
+                  ),
+                  Consumer(builder: (context, ref, child) {
+                    final loopMode = ref.watch(isLoopProvider);
+                    return IconButton(
+                      onPressed: () {
+                        LoopMode loop = switch (loopMode) {
+                          LoopMode.off => LoopMode.one,
+                          LoopMode.one => LoopMode.all,
+                          LoopMode.all => LoopMode.off,
+                        };
+                        ref.read(isLoopProvider.notifier).state = loop;
+                        ref.read(myAudioProvider).setLoopMode(loop);
+                      },
+                      icon: FaIcon(FontAwesomeIcons.repeat,
+                          color: loopMode == LoopMode.off
+                              ? Colors.white
+                              : loopMode == LoopMode.one
+                                  ? Colors.grey
+                                  : Colors.blue,
+                          size: 32),
+                    );
+                  })
                 ],
               ),
             ),

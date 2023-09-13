@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:reno_music/features/like_screen/presentations/like_screen.dart';
 import 'package:reno_music/features/player_screen/presentations/player_screen.dart';
 
 import '../features/home_screen/presentations/home_screen.dart';
@@ -13,7 +14,7 @@ final GlobalKey<NavigatorState> _rootNavigatorKey =
 final GlobalKey<NavigatorState> _sectionANavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'sectionANav');
 
-enum AppRoute { home, player, user }
+enum AppRoute { home, player, user, like }
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -32,12 +33,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 name: AppRoute.home.name,
                 builder: (context, state) => const HomeScreen(),
               ),
-            ]),
-            StatefulShellBranch(routes: [
               GoRoute(
                 path: '/player',
                 name: AppRoute.player.name,
                 builder: (context, state) => const PlayerScreen(),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/like',
+                name: AppRoute.like.name,
+                builder: (context, state) => const LikeScreen(),
               ),
             ]),
             StatefulShellBranch(routes: [
