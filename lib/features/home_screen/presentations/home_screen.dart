@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/utils/app_router.dart';
 import 'package:reno_music/utils/constants.dart';
 
@@ -23,6 +24,8 @@ class HomeScreen extends HookConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             const SizedBox(
               height: 48,
@@ -164,6 +167,72 @@ class HomeScreen extends HookConsumerWidget {
               'Top hit 2023',
               style: Theme.of(context).textTheme.titleMedium,
             ),
+
+            Expanded(
+              child: ListView.builder(
+                  padding: const EdgeInsets.only(top: 16),
+                  itemCount: listAudio.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    AudioEntity audioEntity = listAudio[index];
+                    return InkWell(
+                      onTap: (){
+                        context.pushNamed(AppRoute.player.name, extra: audioEntity);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.only(right: 16, bottom: 16),
+                        child: Row(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: CachedNetworkImage(
+                                  imageUrl:
+                                  audioEntity.poster!,
+                                  width: 90,
+                                  height: 90,
+                                  fit: BoxFit.cover),
+                            ),
+                            const SizedBox(width: 8,),
+                            SizedBox(
+                              height: 90,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8,),
+                                  Text(
+                                    audioEntity.title!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(fontSize: 18),
+                                  ),
+                                  AutoSizeText(
+                                    audioEntity.artist!,
+                                    maxLines: 1,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                        color: Colors.grey,
+                                        letterSpacing: 1.2,
+                                        fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            const FaIcon(FontAwesomeIcons.ellipsisVertical, color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:reno_music/features/like_screen/presentations/like_screen.dart';
+import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/features/player_screen/presentations/player_screen.dart';
 
 import '../features/home_screen/presentations/home_screen.dart';
@@ -36,7 +37,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/player',
                 name: AppRoute.player.name,
-                builder: (context, state) => const PlayerScreen(),
+                builder: (context, state) {
+                  AudioEntity audioEntity = state.extra as AudioEntity;
+                  return PlayerScreen(audioEntity: audioEntity);},
               ),
             ]),
             StatefulShellBranch(routes: [

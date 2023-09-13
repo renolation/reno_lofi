@@ -7,14 +7,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/providers/player_provider.dart';
 
 import '../../../utils/constants.dart';
 
 class PlayerScreen extends HookConsumerWidget {
-  const PlayerScreen({
+  const PlayerScreen( {
     Key? key,
+    required this.audioEntity,
   }) : super(key: key);
+  final AudioEntity audioEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
