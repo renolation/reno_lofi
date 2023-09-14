@@ -120,42 +120,47 @@ class HomeScreen extends HookConsumerWidget {
                   itemCount: 4,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: CachedNetworkImage(
-                                imageUrl:
-                                    'https://b2.renolation.com/file/music-reno/kristaps-ungurs-hqXqJ5QTeQQ-unsplash.jpg',
-                                width: 130,
-                                height: 130,
-                                fit: BoxFit.cover),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            'Flower Boy',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(fontSize: 18),
-                          ),
-                          AutoSizeText(
-                            'Tyler the creator',
-                            maxLines: 1,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall
-                                ?.copyWith(
-                                    color: Colors.grey,
-                                    letterSpacing: 1.2,
-                                    fontSize: 14),
-                          ),
-                        ],
+                    return InkWell(
+                      onTap: (){
+                        context.pushNamed(AppRoute.player.name, extra: playlist.songs);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: CachedNetworkImage(
+                                  imageUrl:
+                                      'https://b2.renolation.com/file/music-reno/kristaps-ungurs-hqXqJ5QTeQQ-unsplash.jpg',
+                                  width: 130,
+                                  height: 130,
+                                  fit: BoxFit.cover),
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              'Flower Boy',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontSize: 18),
+                            ),
+                            AutoSizeText(
+                              'Tyler the creator',
+                              maxLines: 1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                      color: Colors.grey,
+                                      letterSpacing: 1.2,
+                                      fontSize: 14),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }),

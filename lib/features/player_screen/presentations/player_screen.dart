@@ -34,7 +34,6 @@ class PlayerScreen extends HookConsumerWidget {
         for(var audio in listAudioEntity) AudioSource.uri(Uri.parse(audio.linkPath!)),
       ],
     );
-
     log('rebuild');
     return Scaffold(
       body: Padding(
@@ -133,7 +132,7 @@ class PlayerScreen extends HookConsumerWidget {
                 ],
               ),
             ),
-
+            //region playing bar
             Expanded(
               child: Container(
                 height: 80,
@@ -163,13 +162,14 @@ class PlayerScreen extends HookConsumerWidget {
                                 },
                               ),
                             ),
-                            SizedBox(height: 8,),
+                            const SizedBox(height: 8,),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(formatTime(data.toInt())),
+                                  audioProvider.duration?.inSeconds == null ? const Text('0:00'):
                                   Text(formatRemainingTime(audioProvider.duration!.inSeconds - data.toInt())),
                                 ],
                               ),
@@ -182,6 +182,7 @@ class PlayerScreen extends HookConsumerWidget {
                 }),
               ),
             ),
+            //endregion
             SizedBox(
               height: 70,
               width: double.infinity,
@@ -286,6 +287,7 @@ class PlayerScreen extends HookConsumerWidget {
                 ],
               ),
             ),
+
             SizedBox(height: 30,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,

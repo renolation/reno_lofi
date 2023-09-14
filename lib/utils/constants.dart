@@ -1,3 +1,5 @@
+import 'package:reno_music/features/player_screen/domain/playlist_entity.dart';
+
 import '../features/player_screen/domain/audio_entity.dart';
 
 const List<String> listTab = ['Home', 'Search', 'Notifications', 'Profile', 'Playlists'];
@@ -38,3 +40,11 @@ const List<AudioEntity> listAudio = [
     genre: 'Chillhop',
     duration: '3:20',),
 ];
+
+const PlaylistEntity  playlist = PlaylistEntity(
+  poster: 'https://b2.renolation.com/file/music-reno/kristaps-ungurs-hqXqJ5QTeQQ-unsplash.jpg',
+  title: 'Chillhop',
+  genre: 'Chillhop',
+  author: 'Kristaps Ungurs',
+  songs: listAudio,
+);
