@@ -9,6 +9,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
+import 'package:reno_music/providers/player_provider.dart';
 import 'package:reno_music/utils/app_router.dart';
 import 'package:reno_music/utils/constants.dart';
 
@@ -182,6 +183,9 @@ class HomeScreen extends HookConsumerWidget {
                     AudioEntity audioEntity = listAudio[index];
                     return InkWell(
                       onTap: (){
+                        ref.read(isShuffleProvider.notifier).state = false;
+                        ref.read(myAudioProvider).setShuffleModeEnabled(false);
+                        ref.read(isLoopProvider.notifier).state = LoopMode.one;
                         context.pushNamed(AppRoute.player.name, extra: [audioEntity]);
                       },
                       child: Container(
