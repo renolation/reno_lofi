@@ -38,8 +38,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 path: '/player',
                 name: AppRoute.player.name,
                 builder: (context, state) {
-                  AudioEntity audioEntity = state.extra as AudioEntity;
-                  return PlayerScreen(audioEntity: audioEntity);},
+                  List<AudioEntity> listAudioEntity = state.extra as List<AudioEntity>;
+                  return PlayerScreen(listAudioEntity: listAudioEntity);},
               ),
             ]),
             StatefulShellBranch(routes: [

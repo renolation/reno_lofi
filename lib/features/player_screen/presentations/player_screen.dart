@@ -9,18 +9,31 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/providers/player_provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../utils/constants.dart';
 
 class PlayerScreen extends HookConsumerWidget {
   const PlayerScreen( {
     Key? key,
-    required this.audioEntity,
+    required this.listAudioEntity,
   }) : super(key: key);
-  final AudioEntity audioEntity;
+  final List<AudioEntity> listAudioEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final playingAudio = useState(listAudioEntity[0]);
+    final indexPlaying = useState(0);
+
+    final playlist = ConcatenatingAudioSource(
+      useLazyPreparation: true,
+      shuffleOrder: DefaultShuffleOrder(),
+      children: [
+        for(var audio in listAudioEntity) AudioSource.uri(Uri.parse(audio.linkPath!)),
+      ],
+    );
+
     log('rebuild');
     return Scaffold(
       body: Padding(
@@ -82,8 +95,7 @@ class PlayerScreen extends HookConsumerWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(24),
                       child: CachedNetworkImage(
-                          imageUrl:
-                              'https://b2.renolation.com/file/music-reno/kristaps-ungurs-hqXqJ5QTeQQ-unsplash.jpg',
+                          imageUrl: playingAudio.value.poster!,
                           width: 240,
                           height: 240,
                           fit: BoxFit.cover),
@@ -120,6 +132,26 @@ class PlayerScreen extends HookConsumerWidget {
                 ],
               ),
             ),
+            SizedBox(height: 80,
+            child: IconButton(
+              onPressed: (){
+                showModalBottomSheet(
+                  context: context,
+                  useRootNavigator: true,
+                  builder: (context) => ListView.builder(
+                    itemCount: listAudioEntity.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                          listAudioEntity[index].title!,
+                        )
+                      );
+                    }
+                  ),
+                );
+              },
+              icon: FaIcon(FontAwesomeIcons.font),
+            ),),
             Expanded(
               child: SizedBox(
                 height: 80,
@@ -175,6 +207,8 @@ class PlayerScreen extends HookConsumerWidget {
                   }),
                   IconButton(
                     onPressed: () {
+                      indexPlaying.value --;
+                      playingAudio.value = listAudioEntity[indexPlaying.value];
                       ref.read(myAudioProvider).seekToPrevious();
                     },
                     icon: const FaIcon(FontAwesomeIcons.backwardStep,
@@ -192,14 +226,13 @@ class PlayerScreen extends HookConsumerWidget {
                     });
                     return InkWell(
                       onTap: () async {
+                        print(playingAudio.value.linkPath!);
                         if (isPlaying) {
                           ref.read(isPlayingProvider.notifier).state = false;
-
                           await audioProvider.pause();
                         } else {
                           ref.read(isPlayingProvider.notifier).state = true;
-                          await audioProvider.setUrl(urlMp3);
-                          // await audioProvider.seek(const Duration(seconds: 110));
+                          await audioProvider.setAudioSource(playlist, initialIndex: 0, initialPosition: Duration.zero);
                           await audioProvider.play();
                         }
                       },
@@ -219,6 +252,8 @@ class PlayerScreen extends HookConsumerWidget {
                   }),
                   IconButton(
                     onPressed: () {
+                      indexPlaying.value ++;
+                      playingAudio.value = listAudioEntity[indexPlaying.value];
                       ref.read(myAudioProvider).seekToNext();
                     },
                     icon: const FaIcon(FontAwesomeIcons.forwardStep,

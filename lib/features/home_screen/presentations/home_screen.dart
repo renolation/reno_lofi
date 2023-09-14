@@ -84,7 +84,7 @@ class HomeScreen extends HookConsumerWidget {
             ),
             InkWell(
               onTap: (){
-                context.pushNamed(AppRoute.player.name);
+                context.pushNamed(AppRoute.player.name, extra: listAudio);
               },
               child: Text(
                 'Browse',
@@ -177,7 +177,7 @@ class HomeScreen extends HookConsumerWidget {
                     AudioEntity audioEntity = listAudio[index];
                     return InkWell(
                       onTap: (){
-                        context.pushNamed(AppRoute.player.name, extra: audioEntity);
+                        context.pushNamed(AppRoute.player.name, extra: [audioEntity]);
                       },
                       child: Container(
                         padding: const EdgeInsets.only(right: 16, bottom: 16),
