@@ -10,6 +10,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/providers/player_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:reno_music/utils/functions.dart';
 
 import '../../../utils/constants.dart';
 
@@ -108,10 +109,10 @@ class PlayerScreen extends HookConsumerWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Kristaps Ungurs',
+                             Text(playingAudio.value.title!,
                                 style: TextStyle(fontSize: 18)),
                             AutoSizeText(
-                              'Tyler the creator',
+                              playingAudio.value.artist!,
                               maxLines: 1,
                               style: Theme.of(context)
                                   .textTheme
@@ -132,45 +133,48 @@ class PlayerScreen extends HookConsumerWidget {
                 ],
               ),
             ),
-            SizedBox(height: 80,
-            child: IconButton(
-              onPressed: (){
-                showModalBottomSheet(
-                  context: context,
-                  useRootNavigator: true,
-                  builder: (context) => ListView.builder(
-                    itemCount: listAudioEntity.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(
-                          listAudioEntity[index].title!,
-                        )
-                      );
-                    }
-                  ),
-                );
-              },
-              icon: FaIcon(FontAwesomeIcons.font),
-            ),),
+
             Expanded(
-              child: SizedBox(
+              child: Container(
                 height: 80,
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Consumer(builder: (context, ref, child) {
                   final audioProvider = ref.watch(myAudioProvider);
                   final currentPos = ref.watch(currentPosStream);
                   return currentPos.when(
                       data: (data) {
-                        return Slider(
-                          value: data,
-                          min: 0.0,
-                          max: audioProvider.duration?.inSeconds.toDouble() ??
-                              100,
-                          onChanged: (value) {
-                            log(value.toString());
-                            ref
-                                .read(myAudioProvider)
-                                .seek(Duration(seconds: value.toInt()));
-                          },
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SliderTheme(
+                              data: SliderThemeData(
+                                  overlayShape: SliderComponentShape.noThumb
+                              ),
+                              child: Slider(
+                                value: data,
+                                min: 0.0,
+                                max: audioProvider.duration?.inSeconds.toDouble() ??
+                                    100,
+                                onChanged: (value) {
+                                  log(value.toString());
+                                  ref
+                                      .read(myAudioProvider)
+                                      .seek(Duration(seconds: value.toInt()));
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 8,),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(formatTime(data.toInt())),
+                                  Text(formatRemainingTime(audioProvider.duration!.inSeconds - data.toInt())),
+                                ],
+                              ),
+                            ),
+                          ],
                         );
                       },
                       error: (err, stack) => Text('Error $err'),
@@ -178,7 +182,6 @@ class PlayerScreen extends HookConsumerWidget {
                 }),
               ),
             ),
-
             SizedBox(
               height: 70,
               width: double.infinity,
@@ -283,8 +286,42 @@ class PlayerScreen extends HookConsumerWidget {
                 ],
               ),
             ),
+            SizedBox(height: 30,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: (){
+                      showModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        builder: (context) => ListView.builder(
+                            itemCount: listAudioEntity.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(
+                                  listAudioEntity[index].title!,
+                                ),
+                                onTap: (){
+                                  indexPlaying.value = index;
+                                  playingAudio.value = listAudioEntity[index];
+                                  ref
+                                      .read(myAudioProvider)
+                                      .seek(const Duration(seconds: 0), index: index);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            }
+                        ),
+                      );
+                    },
+                    icon: FaIcon(FontAwesomeIcons.listUl),
+                  ),
+                ],
+              ),),
             const SizedBox(
-              height: 16,
+              height: 0,
             ),
           ],
         ),
