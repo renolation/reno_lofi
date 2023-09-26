@@ -50,6 +50,8 @@ dependencies:
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
 #  modal_bottom_sheet: ^2.1.2
+  dio: ^5.1.1
+
 
 dependency_overrides:
 #  modal_bottom_sheet:

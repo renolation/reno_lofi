@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:reno_music/features/home_screen/data/home_controller.dart';
 import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/providers/player_provider.dart';
 import 'package:reno_music/utils/app_router.dart';
@@ -175,12 +176,15 @@ class HomeScreen extends HookConsumerWidget {
             ),
 
             Expanded(
-              child: ListView.builder(
+              child: Consumer(builder: (context, ref, child) {
+                final listHotAudio = ref.watch(homeControllerProvider);
+                return listHotAudio.when(data: (data){
+                   return ListView.builder(
                   padding: const EdgeInsets.only(top: 16),
-                  itemCount: listAudio.length,
+                  itemCount: data.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    AudioEntity audioEntity = listAudio[index];
+                    AudioEntity audioEntity = data[index];
                     return InkWell(
                       onTap: (){
                         ref.read(isShuffleProvider.notifier).state = false;
@@ -198,7 +202,7 @@ class HomeScreen extends HookConsumerWidget {
                               borderRadius: BorderRadius.circular(16),
                               child: CachedNetworkImage(
                                   imageUrl:
-                                  audioEntity.poster!,
+                                  audioEntity.posterUrl!,
                                   width: 90,
                                   height: 90,
                                   fit: BoxFit.cover),
@@ -239,8 +243,13 @@ class HomeScreen extends HookConsumerWidget {
                         ),
                       ),
                     );
-                  }),
-            ),
+                  });
+                },
+                  error: (err, stack) => Text('Error $err'),
+                loading: () => Text('loading'),
+              );
+
+            })),
 
           ],
         ),

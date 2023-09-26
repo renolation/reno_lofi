@@ -20,13 +20,13 @@ AudioEntity _$AudioEntityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AudioEntity {
-  String? get poster => throw _privateConstructorUsedError;
-  String? get linkPath => throw _privateConstructorUsedError;
+  String? get posterUrl => throw _privateConstructorUsedError;
+  String? get fileUrl => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get artist => throw _privateConstructorUsedError;
   String? get album => throw _privateConstructorUsedError;
-  String? get genre => throw _privateConstructorUsedError;
-  String? get duration => throw _privateConstructorUsedError;
+  List<String>? get genre => throw _privateConstructorUsedError;
+  int? get duration => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,13 +41,13 @@ abstract class $AudioEntityCopyWith<$Res> {
       _$AudioEntityCopyWithImpl<$Res, AudioEntity>;
   @useResult
   $Res call(
-      {String? poster,
-      String? linkPath,
+      {String? posterUrl,
+      String? fileUrl,
       String? title,
       String? artist,
       String? album,
-      String? genre,
-      String? duration});
+      List<String>? genre,
+      int? duration});
 }
 
 /// @nodoc
@@ -63,8 +63,8 @@ class _$AudioEntityCopyWithImpl<$Res, $Val extends AudioEntity>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? poster = freezed,
-    Object? linkPath = freezed,
+    Object? posterUrl = freezed,
+    Object? fileUrl = freezed,
     Object? title = freezed,
     Object? artist = freezed,
     Object? album = freezed,
@@ -72,13 +72,13 @@ class _$AudioEntityCopyWithImpl<$Res, $Val extends AudioEntity>
     Object? duration = freezed,
   }) {
     return _then(_value.copyWith(
-      poster: freezed == poster
-          ? _value.poster
-          : poster // ignore: cast_nullable_to_non_nullable
+      posterUrl: freezed == posterUrl
+          ? _value.posterUrl
+          : posterUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      linkPath: freezed == linkPath
-          ? _value.linkPath
-          : linkPath // ignore: cast_nullable_to_non_nullable
+      fileUrl: freezed == fileUrl
+          ? _value.fileUrl
+          : fileUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       title: freezed == title
           ? _value.title
@@ -95,11 +95,11 @@ class _$AudioEntityCopyWithImpl<$Res, $Val extends AudioEntity>
       genre: freezed == genre
           ? _value.genre
           : genre // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<String>?,
       duration: freezed == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
     ) as $Val);
   }
 }
@@ -113,13 +113,13 @@ abstract class _$$_AudioEntityCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? poster,
-      String? linkPath,
+      {String? posterUrl,
+      String? fileUrl,
       String? title,
       String? artist,
       String? album,
-      String? genre,
-      String? duration});
+      List<String>? genre,
+      int? duration});
 }
 
 /// @nodoc
@@ -133,8 +133,8 @@ class __$$_AudioEntityCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? poster = freezed,
-    Object? linkPath = freezed,
+    Object? posterUrl = freezed,
+    Object? fileUrl = freezed,
     Object? title = freezed,
     Object? artist = freezed,
     Object? album = freezed,
@@ -142,13 +142,13 @@ class __$$_AudioEntityCopyWithImpl<$Res>
     Object? duration = freezed,
   }) {
     return _then(_$_AudioEntity(
-      poster: freezed == poster
-          ? _value.poster
-          : poster // ignore: cast_nullable_to_non_nullable
+      posterUrl: freezed == posterUrl
+          ? _value.posterUrl
+          : posterUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      linkPath: freezed == linkPath
-          ? _value.linkPath
-          : linkPath // ignore: cast_nullable_to_non_nullable
+      fileUrl: freezed == fileUrl
+          ? _value.fileUrl
+          : fileUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       title: freezed == title
           ? _value.title
@@ -163,13 +163,13 @@ class __$$_AudioEntityCopyWithImpl<$Res>
           : album // ignore: cast_nullable_to_non_nullable
               as String?,
       genre: freezed == genre
-          ? _value.genre
+          ? _value._genre
           : genre // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<String>?,
       duration: freezed == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
     ));
   }
 }
@@ -178,23 +178,24 @@ class __$$_AudioEntityCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_AudioEntity implements _AudioEntity {
   const _$_AudioEntity(
-      {this.poster = '',
-      this.linkPath = '',
+      {this.posterUrl = '',
+      this.fileUrl = '',
       this.title = '',
       this.artist = '',
       this.album = '',
-      this.genre = '',
-      this.duration = ''});
+      final List<String>? genre = const [],
+      this.duration = 0})
+      : _genre = genre;
 
   factory _$_AudioEntity.fromJson(Map<String, dynamic> json) =>
       _$$_AudioEntityFromJson(json);
 
   @override
   @JsonKey()
-  final String? poster;
+  final String? posterUrl;
   @override
   @JsonKey()
-  final String? linkPath;
+  final String? fileUrl;
   @override
   @JsonKey()
   final String? title;
@@ -204,16 +205,24 @@ class _$_AudioEntity implements _AudioEntity {
   @override
   @JsonKey()
   final String? album;
+  final List<String>? _genre;
   @override
   @JsonKey()
-  final String? genre;
+  List<String>? get genre {
+    final value = _genre;
+    if (value == null) return null;
+    if (_genre is EqualUnmodifiableListView) return _genre;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   @JsonKey()
-  final String? duration;
+  final int? duration;
 
   @override
   String toString() {
-    return 'AudioEntity(poster: $poster, linkPath: $linkPath, title: $title, artist: $artist, album: $album, genre: $genre, duration: $duration)';
+    return 'AudioEntity(posterUrl: $posterUrl, fileUrl: $fileUrl, title: $title, artist: $artist, album: $album, genre: $genre, duration: $duration)';
   }
 
   @override
@@ -221,21 +230,21 @@ class _$_AudioEntity implements _AudioEntity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AudioEntity &&
-            (identical(other.poster, poster) || other.poster == poster) &&
-            (identical(other.linkPath, linkPath) ||
-                other.linkPath == linkPath) &&
+            (identical(other.posterUrl, posterUrl) ||
+                other.posterUrl == posterUrl) &&
+            (identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.artist, artist) || other.artist == artist) &&
             (identical(other.album, album) || other.album == album) &&
-            (identical(other.genre, genre) || other.genre == genre) &&
+            const DeepCollectionEquality().equals(other._genre, _genre) &&
             (identical(other.duration, duration) ||
                 other.duration == duration));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, poster, linkPath, title, artist, album, genre, duration);
+  int get hashCode => Object.hash(runtimeType, posterUrl, fileUrl, title,
+      artist, album, const DeepCollectionEquality().hash(_genre), duration);
 
   @JsonKey(ignore: true)
   @override
@@ -253,21 +262,21 @@ class _$_AudioEntity implements _AudioEntity {
 
 abstract class _AudioEntity implements AudioEntity {
   const factory _AudioEntity(
-      {final String? poster,
-      final String? linkPath,
+      {final String? posterUrl,
+      final String? fileUrl,
       final String? title,
       final String? artist,
       final String? album,
-      final String? genre,
-      final String? duration}) = _$_AudioEntity;
+      final List<String>? genre,
+      final int? duration}) = _$_AudioEntity;
 
   factory _AudioEntity.fromJson(Map<String, dynamic> json) =
       _$_AudioEntity.fromJson;
 
   @override
-  String? get poster;
+  String? get posterUrl;
   @override
-  String? get linkPath;
+  String? get fileUrl;
   @override
   String? get title;
   @override
@@ -275,9 +284,9 @@ abstract class _AudioEntity implements AudioEntity {
   @override
   String? get album;
   @override
-  String? get genre;
+  List<String>? get genre;
   @override
-  String? get duration;
+  int? get duration;
   @override
   @JsonKey(ignore: true)
   _$$_AudioEntityCopyWith<_$_AudioEntity> get copyWith =>

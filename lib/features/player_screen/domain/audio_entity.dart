@@ -10,13 +10,13 @@ class AudioEntity with _$AudioEntity  {
 
   const factory AudioEntity({
 
-    @Default('') String? poster,
-    @Default('') String? linkPath,
+    @Default('') String? posterUrl,
+    @Default('') String? fileUrl,
     @Default('') String? title,
     @Default('') String? artist,
     @Default('') String? album,
-    @Default('') String? genre,
-    @Default('') String? duration,
+    @Default([]) List<String>? genre,
+    @Default(0) int? duration,
 
 
   }) = _AudioEntity;

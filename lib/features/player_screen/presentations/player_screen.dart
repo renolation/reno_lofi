@@ -31,7 +31,7 @@ class PlayerScreen extends HookConsumerWidget {
       useLazyPreparation: true,
       shuffleOrder: DefaultShuffleOrder(),
       children: [
-        for(var audio in listAudioEntity) AudioSource.uri(Uri.parse(audio.linkPath!)),
+        for(var audio in listAudioEntity) AudioSource.uri(Uri.parse(audio.fileUrl!)),
       ],
     );
     log('rebuild');
@@ -95,7 +95,7 @@ class PlayerScreen extends HookConsumerWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(24),
                       child: CachedNetworkImage(
-                          imageUrl: playingAudio.value.poster!,
+                          imageUrl: playingAudio.value.posterUrl!,
                           width: 240,
                           height: 240,
                           fit: BoxFit.cover),
@@ -230,7 +230,7 @@ class PlayerScreen extends HookConsumerWidget {
                     });
                     return InkWell(
                       onTap: () async {
-                        print(playingAudio.value.linkPath!);
+                        print(playingAudio.value.fileUrl!);
                         if (isPlaying) {
                           ref.read(isPlayingProvider.notifier).state = false;
                           await audioProvider.pause();
