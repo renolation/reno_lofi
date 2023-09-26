@@ -8,8 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:reno_music/features/home_screen/data/home_controller.dart';
+import 'package:reno_music/features/home_screen/data/hot_controller.dart';
+import 'package:reno_music/features/home_screen/data/playlist_controller.dart';
 import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
+import 'package:reno_music/features/player_screen/domain/playlist_entity.dart';
 import 'package:reno_music/providers/player_provider.dart';
 import 'package:reno_music/utils/app_router.dart';
 import 'package:reno_music/utils/constants.dart';
@@ -118,10 +120,15 @@ class HomeScreen extends HookConsumerWidget {
             ),
             SizedBox(
               height: 200,
-              child: ListView.builder(
-                  itemCount: 4,
+              child: Consumer(builder: (context, ref, child) {
+                final playlistHome = ref.watch(playlistControllerProvider);
+                return playlistHome.when(data: (data){
+                  return ListView.builder(
+                  itemCount: data.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
+                                        PlaylistEntity audioEntity = data[index];
+
                     return InkWell(
                       onTap: (){
                         context.pushNamed(AppRoute.player.name, extra: playlist.songs);
@@ -134,8 +141,7 @@ class HomeScreen extends HookConsumerWidget {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://b2.renolation.com/file/music-reno/kristaps-ungurs-hqXqJ5QTeQQ-unsplash.jpg',
+                                  imageUrl:audioEntity.poster!,
                                   width: 130,
                                   height: 130,
                                   fit: BoxFit.cover),
@@ -144,7 +150,7 @@ class HomeScreen extends HookConsumerWidget {
                               height: 4,
                             ),
                             Text(
-                              'Flower Boy',
+                              audioEntity.title!,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium
@@ -165,7 +171,12 @@ class HomeScreen extends HookConsumerWidget {
                         ),
                       ),
                     );
-                  }),
+                  });
+                },
+                  error: (err, stack) => Text('Error $err'),
+                  loading: () => Text('loading'),
+                );
+              }),
             ),
             const SizedBox(
               height: 16,
@@ -177,7 +188,7 @@ class HomeScreen extends HookConsumerWidget {
 
             Expanded(
               child: Consumer(builder: (context, ref, child) {
-                final listHotAudio = ref.watch(homeControllerProvider);
+                final listHotAudio = ref.watch(hotControllerProvider);
                 return listHotAudio.when(data: (data){
                    return ListView.builder(
                   padding: const EdgeInsets.only(top: 16),
