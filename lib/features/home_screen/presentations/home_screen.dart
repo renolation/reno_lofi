@@ -98,22 +98,26 @@ class HomeScreen extends HookConsumerWidget {
             const SizedBox(
               height: 16,
             ),
-            SizedBox(
-              height: 30,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (var text in listTab)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: Text(
-                        text,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    )
-                ],
-              ),
+            // SizedBox(
+            //   height: 30,
+              // child: ListView(
+              //   shrinkWrap: true,
+              //   scrollDirection: Axis.horizontal,
+              //   children: [
+              //     for (var text in listTab)
+              //       Padding(
+              //         padding: const EdgeInsets.only(right: 8),
+              //         child: Text(
+              //           text,
+              //           style: Theme.of(context).textTheme.titleMedium,
+              //         ),
+              //       )
+              //   ],
+              // ),
+            // ),
+            Text(
+              'Popular Playlist',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(
               height: 8,
