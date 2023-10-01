@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/providers/player_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -15,7 +16,7 @@ import 'package:reno_music/utils/functions.dart';
 import '../../../utils/constants.dart';
 
 class PlayerScreen extends HookConsumerWidget {
-  const PlayerScreen( {
+  const PlayerScreen({
     Key? key,
     required this.listAudioEntity,
   }) : super(key: key);
@@ -23,7 +24,6 @@ class PlayerScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final playingAudio = useState(listAudioEntity[0]);
     final indexPlaying = useState(0);
 
@@ -31,9 +31,11 @@ class PlayerScreen extends HookConsumerWidget {
       useLazyPreparation: true,
       shuffleOrder: DefaultShuffleOrder(),
       children: [
-        for(var audio in listAudioEntity) AudioSource.uri(Uri.parse(audio.fileUrl!)),
+        for (var audio in listAudioEntity)
+          AudioSource.uri(Uri.parse(audio.fileUrl!)),
       ],
     );
+
     log('rebuild');
     return Scaffold(
       body: Padding(
@@ -49,7 +51,7 @@ class PlayerScreen extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     context.pop();
                   },
                   child: Container(
@@ -70,68 +72,114 @@ class PlayerScreen extends HookConsumerWidget {
                   'Now Playing',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                      color: const Color(0xff212123),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: const Center(
-                      child: FaIcon(
-                    FontAwesomeIcons.ellipsis,
-                    color: Colors.white,
-                    size: 18,
-                  )),
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) => Container(),
+                    );
+                  },
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                        color: const Color(0xff212123),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: const Center(
+                        child: FaIcon(
+                      FontAwesomeIcons.ellipsis,
+                      color: Colors.white,
+                      size: 18,
+                    )),
+                  ),
                 ),
               ],
             ),
             //endregion
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(48),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: CachedNetworkImage(
-                          imageUrl: playingAudio.value.posterUrl!,
-                          width: 240,
-                          height: 240,
-                          fit: BoxFit.cover),
+            Consumer(builder: (context, ref, child) {
+              final audioProvider = ref.read(myAudioProvider);
+              audioProvider.currentIndexStream.listen((event) {
+                if (event != null) {
+                  playingAudio.value = listAudioEntity[event];
+                }
+              });
+              return Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(48),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: CachedNetworkImage(
+                            imageUrl: playingAudio.value.posterUrl!,
+                            width: 240,
+                            height: 240,
+                            fit: BoxFit.cover),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                             Text(playingAudio.value.title!,
-                                style: TextStyle(fontSize: 18)),
-                            AutoSizeText(
-                              playingAudio.value.artist!,
-                              maxLines: 1,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                      color: Colors.grey,
-                                      letterSpacing: 1.2,
-                                      fontSize: 14),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        const FaIcon(FontAwesomeIcons.heart,
-                            color: Colors.white, size: 18),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(playingAudio.value.title!,
+                                  style: TextStyle(fontSize: 18)),
+                              AutoSizeText(
+                                playingAudio.value.artist!,
+                                maxLines: 1,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(
+                                        color: Colors.grey,
+                                        letterSpacing: 1.2,
+                                        fontSize: 14),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          const FaIcon(FontAwesomeIcons.heart,
+                              color: Colors.white, size: 18),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              showBarModalBottomSheet(
+                                backgroundColor: Theme.of(context).colorScheme.background,
+                                context: context,
+                                useRootNavigator: true,
+                                builder: (context) => ListView.builder(
+                                    itemCount: listAudioEntity.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        title: Text(
+                                          listAudioEntity[index].title!,
+                                        ),
+                                        onTap: () {
+                                          indexPlaying.value = index;
+                                          playingAudio.value =
+                                              listAudioEntity[index];
+                                          ref.read(myAudioProvider).seek(
+                                              const Duration(seconds: 0),
+                                              index: index);
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    }),
+                              );
+                            },
+                            icon:
+                                const FaIcon(FontAwesomeIcons.listUl, size: 18),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
             //region playing bar
             Expanded(
               child: Container(
@@ -147,12 +195,12 @@ class PlayerScreen extends HookConsumerWidget {
                           children: [
                             SliderTheme(
                               data: SliderThemeData(
-                                  overlayShape: SliderComponentShape.noThumb
-                              ),
+                                  overlayShape: SliderComponentShape.noThumb),
                               child: Slider(
                                 value: data,
                                 min: 0.0,
-                                max: audioProvider.duration?.inSeconds.toDouble() ??
+                                max: audioProvider.duration?.inSeconds
+                                        .toDouble() ??
                                     100,
                                 onChanged: (value) {
                                   log(value.toString());
@@ -162,15 +210,22 @@ class PlayerScreen extends HookConsumerWidget {
                                 },
                               ),
                             ),
-                            const SizedBox(height: 8,),
+                            const SizedBox(
+                              height: 8,
+                            ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(formatTime(data.toInt())),
-                                  audioProvider.duration?.inSeconds == null ? const Text('0:00'):
-                                  Text(formatRemainingTime(audioProvider.duration!.inSeconds - data.toInt())),
+                                  audioProvider.duration?.inSeconds == null
+                                      ? const Text('0:00')
+                                      : Text(formatRemainingTime(
+                                          audioProvider.duration!.inSeconds -
+                                              data.toInt())),
                                 ],
                               ),
                             ),
@@ -211,7 +266,7 @@ class PlayerScreen extends HookConsumerWidget {
                   }),
                   IconButton(
                     onPressed: () {
-                      indexPlaying.value --;
+                      indexPlaying.value--;
                       playingAudio.value = listAudioEntity[indexPlaying.value];
                       ref.read(myAudioProvider).seekToPrevious();
                     },
@@ -236,7 +291,8 @@ class PlayerScreen extends HookConsumerWidget {
                           await audioProvider.pause();
                         } else {
                           ref.read(isPlayingProvider.notifier).state = true;
-                          await audioProvider.setAudioSource(playlist, initialIndex: 0, initialPosition: Duration.zero);
+                          await audioProvider.setAudioSource(playlist,
+                              initialIndex: 0, initialPosition: Duration.zero);
                           await audioProvider.play();
                         }
                       },
@@ -256,7 +312,7 @@ class PlayerScreen extends HookConsumerWidget {
                   }),
                   IconButton(
                     onPressed: () {
-                      indexPlaying.value ++;
+                      indexPlaying.value++;
                       playingAudio.value = listAudioEntity[indexPlaying.value];
                       ref.read(myAudioProvider).seekToNext();
                     },
@@ -288,40 +344,6 @@ class PlayerScreen extends HookConsumerWidget {
               ),
             ),
 
-            SizedBox(height: 30,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: (){
-                      showModalBottomSheet(
-                        context: context,
-                        useRootNavigator: true,
-                        builder: (context) => ListView.builder(
-                            itemCount: listAudioEntity.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(
-                                  listAudioEntity[index].title!,
-                                ),
-                                onTap: (){
-                                  indexPlaying.value = index;
-                                  playingAudio.value = listAudioEntity[index];
-                                  ref
-                                      .read(myAudioProvider)
-                                      .seek(const Duration(seconds: 0), index: index);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            }
-                        ),
-                      );
-                    },
-                    icon: FaIcon(FontAwesomeIcons.listUl),
-                  ),
-                ],
-              ),),
             const SizedBox(
               height: 0,
             ),

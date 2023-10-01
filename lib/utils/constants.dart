@@ -69,7 +69,8 @@ const PlaylistEntity playlist = PlaylistEntity(
 );
 
 class Constants {
-  static const String host = '192.168.31.62';
+  // static const String host = '192.168.31.62';
+  static const String host = '192.168.1.144';
   // static const String host = 'truyen.getdata.one';
   //
   static const String scheme = 'http';

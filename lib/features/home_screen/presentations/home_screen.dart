@@ -87,7 +87,7 @@ class HomeScreen extends HookConsumerWidget {
               height: 32,
             ),
             InkWell(
-              onTap: (){
+              onTap: () {
                 context.pushNamed(AppRoute.player.name, extra: listAudio);
               },
               child: Text(
@@ -100,20 +100,20 @@ class HomeScreen extends HookConsumerWidget {
             ),
             // SizedBox(
             //   height: 30,
-              // child: ListView(
-              //   shrinkWrap: true,
-              //   scrollDirection: Axis.horizontal,
-              //   children: [
-              //     for (var text in listTab)
-              //       Padding(
-              //         padding: const EdgeInsets.only(right: 8),
-              //         child: Text(
-              //           text,
-              //           style: Theme.of(context).textTheme.titleMedium,
-              //         ),
-              //       )
-              //   ],
-              // ),
+            // child: ListView(
+            //   shrinkWrap: true,
+            //   scrollDirection: Axis.horizontal,
+            //   children: [
+            //     for (var text in listTab)
+            //       Padding(
+            //         padding: const EdgeInsets.only(right: 8),
+            //         child: Text(
+            //           text,
+            //           style: Theme.of(context).textTheme.titleMedium,
+            //         ),
+            //       )
+            //   ],
+            // ),
             // ),
             Text(
               'Popular Playlist',
@@ -126,57 +126,58 @@ class HomeScreen extends HookConsumerWidget {
               height: 200,
               child: Consumer(builder: (context, ref, child) {
                 final playlistHome = ref.watch(playlistControllerProvider);
-                return playlistHome.when(data: (data){
-                  return ListView.builder(
-                  itemCount: data.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                                        PlaylistEntity audioEntity = data[index];
-
-                    return InkWell(
-                      onTap: (){
-                        context.pushNamed(AppRoute.player.name, extra: playlist.songs);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: CachedNetworkImage(
-                                  imageUrl:audioEntity.poster!,
-                                  width: 130,
-                                  height: 130,
-                                  fit: BoxFit.cover),
+                return playlistHome.when(
+                  data: (data) {
+                    return ListView.builder(
+                        itemCount: data.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          PlaylistEntity playlistEntity = data[index];
+                          return InkWell(
+                            onTap: () {
+                              context.pushNamed(AppRoute.player.name,
+                                  extra: playlistEntity.songs);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: CachedNetworkImage(
+                                        imageUrl: playlistEntity.poster!,
+                                        width: 130,
+                                        height: 130,
+                                        fit: BoxFit.cover),
+                                  ),
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    playlistEntity.title!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(fontSize: 18),
+                                  ),
+                                  AutoSizeText(
+                                    'Tyler the creator',
+                                    maxLines: 1,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                            color: Colors.grey,
+                                            letterSpacing: 1.2,
+                                            fontSize: 14),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              audioEntity.title!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(fontSize: 18),
-                            ),
-                            AutoSizeText(
-                              'Tyler the creator',
-                              maxLines: 1,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                      color: Colors.grey,
-                                      letterSpacing: 1.2,
-                                      fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  });
-                },
+                          );
+                        });
+                  },
                   error: (err, stack) => Text('Error $err'),
                   loading: () => Text('loading'),
                 );
@@ -190,82 +191,90 @@ class HomeScreen extends HookConsumerWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
 
-            Expanded(
-              child: Consumer(builder: (context, ref, child) {
-                final listHotAudio = ref.watch(hotControllerProvider);
-                return listHotAudio.when(data: (data){
-                   return ListView.builder(
-                  padding: const EdgeInsets.only(top: 16),
-                  itemCount: data.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    AudioEntity audioEntity = data[index];
-                    return InkWell(
-                      onTap: (){
-                        ref.read(isShuffleProvider.notifier).state = false;
-                        ref.read(myAudioProvider).setShuffleModeEnabled(false);
-                        ref.read(isLoopProvider.notifier).state = LoopMode.one;
-                        context.pushNamed(AppRoute.player.name, extra: [audioEntity]);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(right: 16, bottom: 16),
-                        child: Row(
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: CachedNetworkImage(
-                                  imageUrl:
-                                  audioEntity.posterUrl!,
-                                  width: 90,
+            Expanded(child: Consumer(builder: (context, ref, child) {
+              final listHotAudio = ref.watch(hotControllerProvider);
+              return listHotAudio.when(
+                data: (data) {
+                  return ListView.builder(
+                      padding: const EdgeInsets.only(top: 16),
+                      itemCount: data.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        AudioEntity audioEntity = data[index];
+                        return InkWell(
+                          onTap: () {
+                            ref.read(isShuffleProvider.notifier).state = false;
+                            ref
+                                .read(myAudioProvider)
+                                .setShuffleModeEnabled(false);
+                            ref.read(isLoopProvider.notifier).state =
+                                LoopMode.one;
+                            context.pushNamed(AppRoute.player.name,
+                                extra: [audioEntity]);
+                          },
+                          child: Container(
+                            padding:
+                                const EdgeInsets.only(right: 16, bottom: 16),
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: CachedNetworkImage(
+                                      imageUrl: audioEntity.posterUrl!,
+                                      width: 90,
+                                      height: 90,
+                                      fit: BoxFit.cover),
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                SizedBox(
                                   height: 90,
-                                  fit: BoxFit.cover),
-                            ),
-                            const SizedBox(width: 8,),
-                            SizedBox(
-                              height: 90,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 8,),
-                                  Text(
-                                    audioEntity.title!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(fontSize: 18),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        audioEntity.title!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(fontSize: 18),
+                                      ),
+                                      AutoSizeText(
+                                        audioEntity.artist!,
+                                        maxLines: 1,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.copyWith(
+                                                color: Colors.grey,
+                                                letterSpacing: 1.2,
+                                                fontSize: 14),
+                                      ),
+                                    ],
                                   ),
-                                  AutoSizeText(
-                                    audioEntity.artist!,
-                                    maxLines: 1,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.copyWith(
-                                        color: Colors.grey,
-                                        letterSpacing: 1.2,
-                                        fontSize: 14),
-                                  ),
-                                ],
-                              ),
+                                ),
+                                const Spacer(),
+                                const FaIcon(FontAwesomeIcons.ellipsisVertical,
+                                    color: Colors.white),
+                              ],
                             ),
-                            const Spacer(),
-                            const FaIcon(FontAwesomeIcons.ellipsisVertical, color: Colors.white),
-                          ],
-                        ),
-                      ),
-                    );
-                  });
+                          ),
+                        );
+                      });
                 },
-                  error: (err, stack) => Text('Error $err'),
+                error: (err, stack) => Text('Error $err'),
                 loading: () => Text('loading'),
               );
-
             })),
-
           ],
         ),
       ),
