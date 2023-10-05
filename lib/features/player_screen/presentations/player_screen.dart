@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:reno_music/features/player_screen/data/player_controller.dart';
 import 'package:reno_music/features/player_screen/domain/audio_entity.dart';
 import 'package:reno_music/providers/player_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -18,20 +19,20 @@ import '../../../utils/constants.dart';
 class PlayerScreen extends HookConsumerWidget {
   const PlayerScreen({
     Key? key,
-    required this.listAudioEntity,
   }) : super(key: key);
-  final List<AudioEntity> listAudioEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playingAudio = useState(listAudioEntity[0]);
+    final playerProvider = ref.watch(playerControllerProvider);
+
+    final playingAudio = useState(playerProvider[0]);
     final indexPlaying = useState(0);
 
     final playlist = ConcatenatingAudioSource(
       useLazyPreparation: true,
       shuffleOrder: DefaultShuffleOrder(),
       children: [
-        for (var audio in listAudioEntity)
+        for (var audio in playerProvider)
           AudioSource.uri(Uri.parse(audio.fileUrl!)),
       ],
     );
@@ -100,7 +101,7 @@ class PlayerScreen extends HookConsumerWidget {
               final audioProvider = ref.read(myAudioProvider);
               audioProvider.currentIndexStream.listen((event) {
                 if (event != null) {
-                  playingAudio.value = listAudioEntity[event];
+                  playingAudio.value = playerProvider[event];
                 }
               });
               return Padding(
@@ -151,16 +152,16 @@ class PlayerScreen extends HookConsumerWidget {
                                 context: context,
                                 useRootNavigator: true,
                                 builder: (context) => ListView.builder(
-                                    itemCount: listAudioEntity.length,
+                                    itemCount: playerProvider.length,
                                     itemBuilder: (context, index) {
                                       return ListTile(
                                         title: Text(
-                                          listAudioEntity[index].title!,
+                                          playerProvider[index].title!,
                                         ),
                                         onTap: () {
                                           indexPlaying.value = index;
                                           playingAudio.value =
-                                              listAudioEntity[index];
+                                              playerProvider[index];
                                           ref.read(myAudioProvider).seek(
                                               const Duration(seconds: 0),
                                               index: index);
@@ -267,7 +268,7 @@ class PlayerScreen extends HookConsumerWidget {
                   IconButton(
                     onPressed: () {
                       indexPlaying.value--;
-                      playingAudio.value = listAudioEntity[indexPlaying.value];
+                      playingAudio.value = playerProvider[indexPlaying.value];
                       ref.read(myAudioProvider).seekToPrevious();
                     },
                     icon: const FaIcon(FontAwesomeIcons.backwardStep,
@@ -313,7 +314,7 @@ class PlayerScreen extends HookConsumerWidget {
                   IconButton(
                     onPressed: () {
                       indexPlaying.value++;
-                      playingAudio.value = listAudioEntity[indexPlaying.value];
+                      playingAudio.value = playerProvider[indexPlaying.value];
                       ref.read(myAudioProvider).seekToNext();
                     },
                     icon: const FaIcon(FontAwesomeIcons.forwardStep,

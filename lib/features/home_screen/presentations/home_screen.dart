@@ -16,6 +16,8 @@ import 'package:reno_music/providers/player_provider.dart';
 import 'package:reno_music/utils/app_router.dart';
 import 'package:reno_music/utils/constants.dart';
 
+import '../../player_screen/data/player_controller.dart';
+
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({
     Key? key,
@@ -88,6 +90,7 @@ class HomeScreen extends HookConsumerWidget {
             ),
             InkWell(
               onTap: () {
+                ref.read(playerControllerProvider.notifier).addAdd(listAudio);
                 context.pushNamed(AppRoute.player.name, extra: listAudio);
               },
               child: Text(
@@ -135,6 +138,8 @@ class HomeScreen extends HookConsumerWidget {
                           PlaylistEntity playlistEntity = data[index];
                           return InkWell(
                             onTap: () {
+                             ref.read(playerControllerProvider.notifier).addAdd(playlistEntity.songs!);
+
                               context.pushNamed(AppRoute.player.name,
                                   extra: playlistEntity.songs);
                             },
