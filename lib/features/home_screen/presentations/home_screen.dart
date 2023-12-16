@@ -138,6 +138,7 @@ class HomeScreen extends HookConsumerWidget {
                           PlaylistEntity playlistEntity = data[index];
                           return InkWell(
                             onTap: () {
+                              //aaa
                              ref.read(playerControllerProvider.notifier).addAdd(playlistEntity.songs!);
 
                               context.pushNamed(AppRoute.player.name,
