@@ -127,7 +127,7 @@ class PlayerScreen extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(playingAudio.value.title!,
-                                  style: TextStyle(fontSize: 18)),
+                                  style: const TextStyle(fontSize: 18)),
                               AutoSizeText(
                                 playingAudio.value.artist!,
                                 maxLines: 1,

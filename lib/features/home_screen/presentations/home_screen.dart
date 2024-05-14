@@ -139,7 +139,9 @@ class HomeScreen extends HookConsumerWidget {
                           return InkWell(
                             onTap: () {
                               //aaa
-                             ref.read(playerControllerProvider.notifier).addAdd(playlistEntity.songs!);
+                              ref
+                                  .read(playerControllerProvider.notifier)
+                                  .addAdd(playlistEntity.songs!);
 
                               context.pushNamed(AppRoute.player.name,
                                   extra: playlistEntity.songs);
@@ -209,6 +211,9 @@ class HomeScreen extends HookConsumerWidget {
                         AudioEntity audioEntity = data[index];
                         return InkWell(
                           onTap: () {
+                            ref.read(playerControllerProvider.notifier).addAdd([audioEntity]);
+
+
                             ref.read(isShuffleProvider.notifier).state = false;
                             ref
                                 .read(myAudioProvider)

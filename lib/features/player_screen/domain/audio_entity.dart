@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'audio_entity.freezed.dart';
 part 'audio_entity.g.dart';
 
-
 @freezed
 class AudioEntity with _$AudioEntity  {
 
