@@ -1,42 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reno_music/utils/app_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reno_music/route/router.dart';
+import 'package:reno_music/utils/state_logger.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(
+      observers: [StateLogger()],
+      child: MyApp()));
 }
 
-class MyApp extends HookConsumerWidget {
-  const MyApp({
-    Key? key,
-  }) : super(key: key);
+class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final goRouter = ref.watch(goRouterProvider);
+    final router = ref.watch(routerProvider);
+
     return MaterialApp.router(
-      routerConfig: goRouter,
-      debugShowCheckedModeBanner: false,
+      routerConfig: router,
+      title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.greenAccent,
-          brightness: Brightness.light,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-      ).copyWith(
-        textTheme: GoogleFonts.latoTextTheme(ThemeData(brightness: Brightness.light).textTheme),
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xff1D1D1E),
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ).copyWith(
-        textTheme: GoogleFonts.latoTextTheme(ThemeData(brightness: Brightness.dark).textTheme),
-      ),
-      themeMode: ThemeMode.dark,
     );
   }
 }
