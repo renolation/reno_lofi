@@ -24,8 +24,8 @@ const _dummyUser = Auth.signedIn(
 
 @riverpod
 class AuthController extends _$AuthController {
-  late SharedPreferences _sharedPreferences;
-  static const _sharedPrefsKey = 'token';
+  // late SharedPreferences _sharedPreferences;
+  // static const _sharedPrefsKey = 'token';
 
   late final FlutterSecureStorage _storage;
 
@@ -35,7 +35,7 @@ class AuthController extends _$AuthController {
 
   @override
   Future<Auth> build() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
+    // _sharedPreferences = await SharedPreferences.getInstance();
     _storage = ref.read(secureStorageProvider);
 
     _persistenceRefreshLogic();
@@ -43,14 +43,16 @@ class AuthController extends _$AuthController {
 
   }
 
-  Future<Auth> _loginRecoveryAttempt(){
+  Future<Auth> _loginRecoveryAttempt()async{
     try {
-      final savedToken = _sharedPreferences.getString(_sharedPrefsKey);
-      if(savedToken == null) throw const UnauthorizedException('No Auth');
+      final isToken = await _storage.containsKey(key: _tokenKey);
+      if(!isToken) throw const UnauthorizedException('No Auth');
 
-      return _loginWithToken(savedToken);
+      final savedToken = await _storage.read(key: _tokenKey);
+
+      return _loginWithToken(savedToken!);
     } catch (_, __){
-      _sharedPreferences.remove(_sharedPrefsKey).ignore();
+      _storage.delete(key: _tokenKey).ignore();
       return Future.value(const Auth.signedOut());
     }
   }
@@ -139,14 +141,14 @@ class AuthController extends _$AuthController {
     ref.listenSelf((_, next) {
       if (next.isLoading) return;
       if (next.hasError) {
-        _sharedPreferences.remove(_sharedPrefsKey);
+        _storage.delete(key: _tokenKey);
         return;
       }
 
       next.requireValue.map<void>(
-        signedIn: (signedIn) => _sharedPreferences.setString(_sharedPrefsKey, signedIn.token),
+        signedIn: (signedIn) => _storage.write(key: _tokenKey, value: signedIn.token),
         signedOut: (signedOut) {
-          _sharedPreferences.remove(_sharedPrefsKey);
+          _storage.delete(key: _tokenKey);
         },
       );
     });
