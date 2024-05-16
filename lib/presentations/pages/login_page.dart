@@ -14,10 +14,7 @@ class LoginPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    Future<void> login() => ref.read(authControllerProvider.notifier).login(
-      'myEmail',
-      'myPassword',
-    );
+
 
     final error = useState('');
 
@@ -61,7 +58,7 @@ class LoginPage extends HookConsumerWidget {
         error.value = 'Server URL is invalid. Should start with http/https and does not contain any path or query parameters';
         return;
       }
-      final data = await ref.read(authJellyControllerProvider.notifier).signIn(userCredentials);
+      final data = await ref.read(authControllerProvider.notifier).signIn(userCredentials);
       if (data != null) {
           error.value = data;
       }

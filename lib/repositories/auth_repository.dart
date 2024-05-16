@@ -5,6 +5,7 @@ import 'package:reno_music/data/user.dart';
 import 'package:reno_music/data/user_credentials.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../data/auth.dart';
 import '../state/dio_provider.dart';
 
 part 'auth_repository.g.dart';
@@ -14,7 +15,7 @@ class AuthRepository {
 
   final Dio client;
 
-  Future<(User, String)> signIn(UserCredentials userCredentials, {CancelToken? cancelToken}) async {
+  Future<(String, String)> signIn(UserCredentials userCredentials, {CancelToken? cancelToken}) async {
     final url = Uri(
       scheme: 'https',
       host: 'music.renolation.com',
@@ -26,7 +27,7 @@ class AuthRepository {
     dev.log(client.options.headers.toString());
     final response = await client.post(url, data: data, cancelToken: cancelToken);
     print(response.statusCode);
-    return (User.fromJson(response.data["User"]), response.data["AccessToken"] as String);
+    return (response.data["User"]["Id"] as String, response.data["AccessToken"] as String);
   }
 }
 

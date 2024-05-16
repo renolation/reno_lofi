@@ -7,9 +7,7 @@ part 'auth.freezed.dart';
 @freezed
 sealed class Auth with _$Auth {
   const factory Auth.signedIn({
-    required int id,
-    required String displayName,
-    required String email,
+    required String id,
     required String token,
   }) = SignedIn;
   const Auth._();
