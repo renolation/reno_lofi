@@ -32,7 +32,7 @@ class ListLibraryProvider extends _$ListLibraryProvider {
 }
 
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SelectingLibraryController extends _$SelectingLibraryController {
 
   late final FlutterSecureStorage _storage;
@@ -45,8 +45,8 @@ class SelectingLibraryController extends _$SelectingLibraryController {
     return null;
   }
   Future<void> setSelectLibrary(LibraryEntity lib) async {
-    state = lib;
     await _storage.write(key: libraryIdStorageKey, value: lib.id);
     await _storage.write(key: libraryPathStorageKey, value: lib.path);
+    state = lib;
   }
 }

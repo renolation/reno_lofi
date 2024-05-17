@@ -24,12 +24,12 @@ final listLibraryProviderProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$ListLibraryProvider = AutoDisposeAsyncNotifier<List<LibraryEntity>>;
 String _$selectingLibraryControllerHash() =>
-    r'8e5db92a9d0d4763553cbd613aa25fbcea2948a6';
+    r'a60de686234956573964eddd6a80cb642014aa7e';
 
 /// See also [SelectingLibraryController].
 @ProviderFor(SelectingLibraryController)
-final selectingLibraryControllerProvider = AutoDisposeNotifierProvider<
-    SelectingLibraryController, LibraryEntity?>.internal(
+final selectingLibraryControllerProvider =
+    NotifierProvider<SelectingLibraryController, LibraryEntity?>.internal(
   SelectingLibraryController.new,
   name: r'selectingLibraryControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -39,6 +39,6 @@ final selectingLibraryControllerProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$SelectingLibraryController = AutoDisposeNotifier<LibraryEntity?>;
+typedef _$SelectingLibraryController = Notifier<LibraryEntity?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

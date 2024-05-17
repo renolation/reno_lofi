@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:reno_music/data/albums_entity.dart';
 import 'package:reno_music/data/item_entity.dart';
+import 'package:reno_music/domain/providers/list_library_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../repositories/jellyfin_api.dart';
@@ -17,15 +18,16 @@ class AlbumsLibrariesProvider  extends _$AlbumsLibrariesProvider{
   late final String _userId;
 
   @override
-  FutureOr<List<ItemEntity>> build(String libraryId) async {
+  FutureOr<List<ItemEntity>> build() async {
     _api = ref.read(jellyfinApiProvider);
     _storage = ref.read(secureStorageProvider);
     _userId = ref.read(currentUserProvider)!.userId;
-    return fetchAlbums(libraryId);
+    return fetchAlbums();
   }
 
-  FutureOr<List<ItemEntity>> fetchAlbums(String libraryId) async  {
-    final albums = await _api.getAlbums(userId: _userId, libraryId: libraryId);
+  FutureOr<List<ItemEntity>> fetchAlbums() async  {
+    final libId = ref.read(selectingLibraryControllerProvider)!.id;
+    final albums = await _api.getAlbums(userId: _userId, libraryId: libId);
     return albums.items;
   }
 
