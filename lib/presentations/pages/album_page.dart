@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reno_music/data/item_entity.dart';
-import 'package:reno_music/data/songs_entity.dart';
 
+import '../../domains/domains.dart';
 import '../../repositories/jellyfin_api.dart';
 import '../../state/current_user_provider.dart';
 

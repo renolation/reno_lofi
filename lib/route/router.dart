@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reno_music/data/item_entity.dart';
-import 'package:reno_music/presentations/pages/album_page.dart';
-import 'package:reno_music/presentations/pages/albums_page.dart';
-import 'package:reno_music/presentations/pages/home_page.dart';
-import 'package:reno_music/presentations/pages/login_page.dart';
-import 'package:reno_music/presentations/pages/settings_page.dart';
-import 'package:reno_music/presentations/pages/splash_page.dart';
-import 'package:reno_music/route/routes.dart';
+import '../presentations/pages/albums_page.dart';
+import '../presentations/pages/home_page.dart';
+import '../presentations/pages/login_page.dart';
+import '../presentations/pages/settings_page.dart';
+import '../presentations/pages/splash_page.dart';
+import '../route/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../domains/domains.dart';
+import '../presentations/pages/album_page.dart';
 import '../state/auth_controller.dart';
 
 part 'router.g.dart';

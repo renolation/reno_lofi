@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:reno_music/data/item_entity.dart';
+
+import 'item_entity.dart';
 
 part 'albums_entity.freezed.dart';
 part 'albums_entity.g.dart';

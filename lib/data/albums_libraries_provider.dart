@@ -1,12 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:reno_music/data/albums_entity.dart';
-import 'package:reno_music/data/item_entity.dart';
-import 'package:reno_music/domain/providers/list_library_provider.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../repositories/jellyfin_api.dart';
-import '../../state/current_user_provider.dart';
-import '../../state/secure_storage_provider.dart';
+import '../domains/item_entity.dart';
+import '../repositories/jellyfin_api.dart';
+import '../state/current_user_provider.dart';
+import '../state/secure_storage_provider.dart';
+import 'list_library_provider.dart';
 
 part 'albums_libraries_provider.g.dart';
 

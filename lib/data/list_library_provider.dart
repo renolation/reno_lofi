@@ -3,8 +3,8 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:reno_music/data/library_entity.dart';
 
+import '../../domains/library_entity.dart';
 import '../../repositories/jellyfin_api.dart';
 import '../../state/current_user_provider.dart';
 import '../../state/secure_storage_provider.dart';

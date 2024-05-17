@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:reno_music/state/auth_jelly_controller.dart';
-import '../../data/user_credentials.dart';
+import '../../domains/domains.dart';
 import '../../state/auth_controller.dart';
 import '../widgets/labeled_text_field.dart';
 

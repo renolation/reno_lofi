@@ -8,8 +8,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../data/auth.dart';
-import '../data/user_credentials.dart';
+
+import '../domains/domains.dart';
 import '../repositories/auth_repository.dart';
 import 'base_url_provider.dart';
 import 'current_user_provider.dart';

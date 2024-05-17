@@ -1,11 +1,10 @@
 import 'dart:developer' as dev;
 
 import 'package:dio/dio.dart';
-import 'package:reno_music/data/user.dart';
-import 'package:reno_music/data/user_credentials.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../data/auth.dart';
+import '../domains/domains.dart';
 import '../state/dio_provider.dart';
 
 part 'auth_repository.g.dart';

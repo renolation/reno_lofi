@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reno_music/domain/providers/albums_libraries_provider.dart';
-import 'package:reno_music/domain/providers/list_library_provider.dart';
 
-import '../../data/item_entity.dart';
+
+import '../../data/albums_libraries_provider.dart';
+import '../../domains/domains.dart';
 
 class AlbumsPage extends ConsumerWidget {
   const AlbumsPage({super.key});
