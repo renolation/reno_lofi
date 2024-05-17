@@ -49,8 +49,12 @@ class AuthController extends _$AuthController {
       if(!isToken) throw const UnauthorizedException('No Auth');
 
       final savedToken = await _storage.read(key: _tokenKey);
+      final savedUserId = await _storage.read(key: _userIdKey);
+      _setAuthHeader(savedToken!);
+      CurrentUser currentUser= CurrentUser(userId: savedUserId!, token: savedToken);
+      ref.read(currentUserProvider.notifier).state = currentUser;
 
-      return _loginWithToken(savedToken!);
+      return _loginWithToken(currentUser);
     } catch (_, __){
       _storage.delete(key: _tokenKey).ignore();
       return Future.value(const Auth.signedOut());
@@ -108,7 +112,7 @@ class AuthController extends _$AuthController {
 
   void _setAuthHeader(String token) {
     ref.read(dioProvider).options.headers[_tokenKey] = token;
-
+    print('tokenKey $token');
     if (kDebugMode) _notifyDeveloper();
   }
 
@@ -126,13 +130,13 @@ class AuthController extends _$AuthController {
     await Future<void>.delayed(networkRoundTripTime);
     state = const AsyncData(Auth.signedOut());
   }
-  Future<Auth> _loginWithToken(String token) async {
+  Future<Auth> _loginWithToken(CurrentUser currentUser) async {
     final logInAttempt = await Future.delayed(
       networkRoundTripTime,
           () => true, // edit this if you wanna play around
     );
 
-    if (logInAttempt) return _dummyUser;
+    if (logInAttempt) return Auth.signedIn(id: currentUser.userId, token: currentUser.token);
 
     throw const UnauthorizedException('401 Unauthorized or something');
   }
