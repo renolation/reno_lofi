@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reno_music/data/library_entity.dart';
-import 'package:reno_music/domain/providers/current_library_provider.dart';
+import 'package:reno_music/domain/providers/list_library_provider.dart';
 import 'package:reno_music/presentations/widgets/action_button.dart';
 import 'package:reno_music/repositories/jellyfin_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,13 +22,17 @@ class HomePage extends ConsumerWidget {
         title: Text('home'),
       ),
       body: Consumer(builder: (context, ref, child) {
-        final data = ref.watch(currentLibraryProviderProvider);
+        final data = ref.watch(listLibraryProviderProvider);
         return data.when(data: (data){
             return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context,index){
                   LibraryEntity entity = data[index];
-                  return Text(data[index].name!);
+                  return InkWell(
+                      onTap: (){
+                        ref.read(selectingLibraryControllerProvider.notifier).setSelectLibrary(data[index]);
+                      },
+                      child: Card(child: Text(data[index].name!)));
             });
         }, error: (err, stack) => Text('Error $err'),
             loading: () => Text('loading'),

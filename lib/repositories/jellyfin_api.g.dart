@@ -45,6 +45,55 @@ class _JellyfinApi implements JellyfinApi {
     return value;
   }
 
+  @override
+  Future<AlbumsEntity> getAlbums({
+    required String userId,
+    required String libraryId,
+    String type = 'MusicAlbum',
+    String startIndex = '0',
+    String limit = '100',
+    String sortBy = 'DateCreated,SortName',
+    String? contributingArtistIds,
+    String sortOrder = 'Descending',
+    List<String> artistIds = const [],
+    bool recursive = true,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'ParentId': libraryId,
+      r'IncludeItemTypes': type,
+      r'StartIndex': startIndex,
+      r'Limit': limit,
+      r'SortBy': sortBy,
+      r'ContributingArtistIds': contributingArtistIds,
+      r'SortOrder': sortOrder,
+      r'AlbumArtistIds': artistIds,
+      r'Recursive': recursive,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<AlbumsEntity>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/Users/${userId}/Items',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AlbumsEntity.fromJson(_result.data!);
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
