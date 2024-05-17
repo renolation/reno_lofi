@@ -7,12 +7,12 @@ part of 'albums_libraries_provider.dart';
 // **************************************************************************
 
 String _$albumsLibrariesProviderHash() =>
-    r'e19d4b5dd2a270676a34be85c3678abf4d3f24ae';
+    r'a0c659e24d1a0c797d62b181cd926c217561d87c';
 
 /// See also [AlbumsLibrariesProvider].
 @ProviderFor(AlbumsLibrariesProvider)
-final albumsLibrariesProviderProvider = AutoDisposeAsyncNotifierProvider<
-    AlbumsLibrariesProvider, List<ItemEntity>>.internal(
+final albumsLibrariesProviderProvider =
+    AsyncNotifierProvider<AlbumsLibrariesProvider, List<ItemEntity>>.internal(
   AlbumsLibrariesProvider.new,
   name: r'albumsLibrariesProviderProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final albumsLibrariesProviderProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$AlbumsLibrariesProvider = AutoDisposeAsyncNotifier<List<ItemEntity>>;
+typedef _$AlbumsLibrariesProvider = AsyncNotifier<List<ItemEntity>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

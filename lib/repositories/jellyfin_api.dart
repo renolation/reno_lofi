@@ -3,6 +3,7 @@ import 'package:reno_music/data/albums_entity.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/library_entity.dart';
+import '../data/songs_entity.dart';
 import '../state/base_url_provider.dart';
 import '../state/dio_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +34,13 @@ abstract class JellyfinApi {
     @Query('Recursive') bool recursive = true,
   });
 
+  @GET('/Users/{userId}/Items')
+  Future<SongsWrapper> getSongs(
+      {@Path('userId') required String userId, @Query('ParentId') required String albumId, @Query('IncludeItemTypes') String includeType = 'music'});
+
+
 }
+
 
 Provider<JellyfinApi> jellyfinApiProvider = Provider<JellyfinApi>(
   (ref) => JellyfinApi(

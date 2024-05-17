@@ -10,7 +10,7 @@ import '../../state/secure_storage_provider.dart';
 
 part 'albums_libraries_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AlbumsLibrariesProvider  extends _$AlbumsLibrariesProvider{
 
   late final JellyfinApi _api;

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reno_music/data/item_entity.dart';
 import 'package:reno_music/presentations/pages/album_page.dart';
+import 'package:reno_music/presentations/pages/albums_page.dart';
 import 'package:reno_music/presentations/pages/home_page.dart';
 import 'package:reno_music/presentations/pages/login_page.dart';
 import 'package:reno_music/presentations/pages/settings_page.dart';
 import 'package:reno_music/presentations/pages/splash_page.dart';
+import 'package:reno_music/route/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../state/auth_controller.dart';
@@ -32,17 +35,17 @@ GoRouter router(RouterRef ref) {
   final router = GoRouter(
       navigatorKey: _rootNavigatorKey,
       refreshListenable: isAuth,
-      initialLocation: '/splash',
+      initialLocation: Routes.splash,
       debugLogDiagnostics: true,
       routes: <RouteBase>[
         GoRoute(
-          path: '/splash',
-          name: 'splash',
+          path: Routes.splash,
+          name: Routes.splash.name,
           builder: (context, state) => const SplashPage(),
         ),
         GoRoute(
-          path: '/login',
-          name: 'login',
+          path: Routes.login,
+          name: Routes.login.name,
           builder: (context, state) => const LoginPage(),
         ),
         StatefulShellRoute.indexedStack(
@@ -52,43 +55,57 @@ GoRouter router(RouterRef ref) {
             branches: <StatefulShellBranch>[
               StatefulShellBranch(navigatorKey: _sectionMainNavKey, routes: <RouteBase>[
                 GoRoute(
-                    path: '/home',
-                    name: 'home',
+                    path: Routes.home,
+                    name: Routes.home.name,
                     pageBuilder: (context, state) => const NoTransitionPage(child: HomePage()),
                     routes: [
                       GoRoute(
-                          path: 'albums',
-                          name: 'albums',
+                          path: Routes.albums.name,
+                          name: Routes.albums.name,
                           pageBuilder: (
-                            BuildContext context,
-                            GoRouterState router,
-                          ) {
-                            return const NoTransitionPage(
-                              child: AlbumPage(),
-                            );
-                          }),
+                              BuildContext context,
+                              GoRouterState router,
+                              ) =>
+                          const NoTransitionPage(
+                            child: AlbumsPage(),
+                          ),
+                          routes: [
+                            GoRoute(
+                                path: Routes.album.name,
+                                name: Routes.album.name,
+                              builder: (context, state) {
+                                final params = state.extra! as Map<String, dynamic>;
+                                final album = params['album'] is ItemEntity
+                                    ? params['album'] as ItemEntity
+                                    : ItemEntity.fromJson(params['album'] as Map<String, dynamic>);
+                              return  AlbumPage(album: album);
+                              }
+                            )
+                          ],
+
+                      ),
                     ]),
               ]),
               StatefulShellBranch(routes: <RouteBase>[
                 GoRoute(
-                  path: '/settings',
-                  name: 'settings',
+                  path: Routes.settings,
+                  name: Routes.settings.name,
                   builder: (context, state) => const SettingsPage(),
                 ),
               ]),
             ]),
       ],
       redirect: (context, state) {
-        if (isAuth.value.unwrapPrevious().hasError) return '/login';
-        if (isAuth.value.isLoading || !isAuth.value.hasValue) return '/splash';
+        if (isAuth.value.unwrapPrevious().hasError) return Routes.login;
+        if (isAuth.value.isLoading || !isAuth.value.hasValue) return Routes.splash;
 
         final auth = isAuth.value.requireValue;
 
-        final isSplash = state.uri.path == '/splash';
-        if (isSplash) return auth ? '/home' : '/login';
-        final isLoggingIn = state.uri.path == '/login';
-        if (isLoggingIn) return auth ? '/home' : null;
-        return auth ? null : '/splash';
+        final isSplash = state.uri.path == Routes.splash;
+        if (isSplash) return auth ? Routes.home : Routes.login;
+        final isLoggingIn = state.uri.path == Routes.login;
+        if (isLoggingIn) return auth ? Routes.home : null;
+        return auth ? null : Routes.splash;
       });
   ref.onDispose(router.dispose);
   return router;

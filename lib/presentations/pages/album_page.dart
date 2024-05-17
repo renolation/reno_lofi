@@ -1,39 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reno_music/domain/providers/albums_libraries_provider.dart';
-import 'package:reno_music/domain/providers/list_library_provider.dart';
+import 'package:reno_music/data/item_entity.dart';
+import 'package:reno_music/data/songs_entity.dart';
 
-import '../../data/item_entity.dart';
+import '../../repositories/jellyfin_api.dart';
+import '../../state/current_user_provider.dart';
 
-class AlbumPage extends ConsumerWidget {
-  const AlbumPage({super.key});
+class AlbumPage extends ConsumerStatefulWidget {
+  const AlbumPage({super.key, required this.album});
+  final ItemEntity album;
+  @override
+  ConsumerState createState() => _AlbumPageState();
+}
+
+class _AlbumPageState extends ConsumerState<AlbumPage> {
+
+  List<SongsEntity> songs = [];
+
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    _getSongs();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Album Page'),
-          Expanded(
-            child: Consumer(builder: (context, ref, child) {
-              // final libId = ref.read(selectingLibraryControllerProvider);
-              final data = ref.watch(albumsLibrariesProviderProvider);
-                return data.when(data: (data){
-                  return ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index){
-                    final ItemEntity item = data[index];
-                    return Text(item.name);
-                  });
-                }, error: (err, stack) => Text('Error $err'),
-                  loading: () => Text('loading'),
-                );
-              }),
-          )
-          ],
-      ),),
+      body: ListView.builder(
+        itemCount: songs.length,
+          itemBuilder: (context, index){
+            return Text(songs[index].name!);
+          }
+      ),
     );
   }
+
+  void _getSongs() {
+    ref.read(jellyfinApiProvider).getSongs(userId: ref.read(currentUserProvider.notifier).state!.userId, albumId: widget.album.id).then((value) {
+      setState(() {
+        final items = [...value.items]..sort((a, b) => a.indexNumber.compareTo(b.indexNumber));
+        songs = items;
+      });
+    });
+  }
+
 }
