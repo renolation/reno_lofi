@@ -41,6 +41,9 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_animate: ^4.2.0+1
   logger: any
+  just_audio: ^0.9.38
+  just_audio_background: ^0.0.1-beta.12
+  audio_service: ^0.18.13
 
 
 dev_dependencies:
@@ -62,9 +65,58 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
   assets:
     - assets/icons/
     - assets/images/
+
+  fonts:
+    - family: Gilroy
+      fonts:
+        - asset: assets/fonts/Gilroy/Gilroy-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Gilroy/Gilroy-UltraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Gilroy/Gilroy-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Gilroy/Gilroy-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Gilroy/Gilroy-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Gilroy/Gilroy-Semibold.ttf
+          weight: 600
+        - asset: assets/fonts/Gilroy/Gilroy-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Gilroy/Gilroy-Extrabold.ttf
+          weight: 800
+        - asset: assets/fonts/Gilroy/Gilroy-Black.ttf
+          weight: 900
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/Inter-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Inter/Inter-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Inter/Inter-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Inter/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter/Inter-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Inter/Inter-Black.ttf
+          weight: 900
+    - family: JPlayer
+      fonts:
+        - asset: assets/fonts/JPlayer.ttf
+    - family: Entypo
+      fonts:
+        - asset: assets/fonts/Entypo.ttf
 
 flutter_intl:
   enabled: true

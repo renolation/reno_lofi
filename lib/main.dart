@@ -5,7 +5,7 @@ import 'package:reno_music/utils/state_logger.dart';
 
 void main() {
   runApp(const ProviderScope(
-      observers: [StateLogger()],
+      // observers: [StateLogger()],
       child: MyApp()));
 }
 

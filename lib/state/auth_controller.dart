@@ -50,9 +50,11 @@ class AuthController extends _$AuthController {
 
       final savedToken = await _storage.read(key: _tokenKey);
       final savedUserId = await _storage.read(key: _userIdKey);
+      final savedBaseUrl = await _storage.read(key: _serverUrlKey);
       _setAuthHeader(savedToken!);
       CurrentUser currentUser= CurrentUser(userId: savedUserId!, token: savedToken);
       ref.read(currentUserProvider.notifier).state = currentUser;
+      ref.read(baseUrlProvider.notifier).state = savedBaseUrl;
 
       return _loginWithToken(currentUser);
     } catch (_, __){

@@ -13,7 +13,6 @@ part 'jellyfin_api.g.dart';
 abstract class JellyfinApi {
   factory JellyfinApi(Dio client, {String baseUrl}) = _JellyfinApi;
 
-
   //get collection
   @GET('/Users/{userId}/Views')
   Future<Libraries> getLibraries({@Path('userId') required String userId});
@@ -35,11 +34,10 @@ abstract class JellyfinApi {
 
   @GET('/Users/{userId}/Items')
   Future<SongsWrapper> getSongs(
-      {@Path('userId') required String userId, @Query('ParentId') required String albumId, @Query('IncludeItemTypes') String includeType = 'music'});
-
-
+      {@Path('userId') required String userId,
+      @Query('ParentId') required String albumId,
+      @Query('IncludeItemTypes') String includeType = 'music'});
 }
-
 
 Provider<JellyfinApi> jellyfinApiProvider = Provider<JellyfinApi>(
   (ref) => JellyfinApi(

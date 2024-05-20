@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:reno_music/state/playback_provider.dart';
 
 import '../../domains/domains.dart';
 import '../../repositories/jellyfin_api.dart';
+import '../../state/base_url_provider.dart';
 import '../../state/current_user_provider.dart';
 
 class AlbumPage extends ConsumerStatefulWidget {
@@ -26,11 +28,28 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Album: ${widget.album.name}'),
+      ),
       body: ListView.builder(
         itemCount: songs.length,
           itemBuilder: (context, index){
-            return Text(songs[index].name!);
+            return InkWell(
+              onTap: () async {
+
+                print(ref.read(baseUrlProvider)!);
+                print('cac');
+                ref.read(playbackNotifierProvider.notifier).play(songs[index], songs, widget.album);
+              },
+                child: SizedBox(
+                  height: 50,
+                  child: Column(
+                    children: [
+                      Text(songs[index].name!),
+                      // Text(songs[index].)
+                    ],
+                  ),
+                ));
           }
       ),
     );

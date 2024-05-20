@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../presentations/pages/albums_page.dart';
 import '../presentations/pages/home_page.dart';
 import '../presentations/pages/login_page.dart';
+import '../presentations/pages/main_page.dart';
 import '../presentations/pages/settings_page.dart';
 import '../presentations/pages/splash_page.dart';
 import '../route/routes.dart';
@@ -50,7 +51,7 @@ GoRouter router(RouterRef ref) {
         ),
         StatefulShellRoute.indexedStack(
             builder: (BuildContext context, GoRouterState state, StatefulNavigationShell navigationShell) {
-              return ScaffoldWithNavBar(navigationShell: navigationShell);
+              return MainPage(navigationShell: navigationShell);
             },
             branches: <StatefulShellBranch>[
               StatefulShellBranch(navigatorKey: _sectionMainNavKey, routes: <RouteBase>[
@@ -114,8 +115,8 @@ GoRouter router(RouterRef ref) {
 class ScaffoldWithNavBar extends StatelessWidget {
   const ScaffoldWithNavBar({
     required this.navigationShell,
-    Key? key,
-  }) : super(key: key ?? const ValueKey<String>('ScaffoldWithNavBar'));
+    super.key,
+  });
 
   final StatefulNavigationShell navigationShell;
 
