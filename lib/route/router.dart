@@ -27,6 +27,7 @@ GoRouter router(RouterRef ref) {
     // update the listenable, when some provider value changes
     // here, we are just interested in wheter the user's logged in
     ..listen(
+
       authControllerProvider.select((value) => value.whenData((value) => value.isAuth)),
       (_, next) {
         isAuth.value = next;

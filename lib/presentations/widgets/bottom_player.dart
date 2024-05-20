@@ -9,6 +9,7 @@ import 'package:reno_music/domains/domains.dart';
 import 'package:reno_music/presentations/widgets/simple_list_tile.dart';
 import 'package:reno_music/state/playback_provider.dart';
 import 'package:reno_music/state/player_provider.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import '../resources/resources.dart';
 import 'play_pause_button.dart';
@@ -32,6 +33,11 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> {
   final _randomQueue = ValueNotifier<bool>(false);
   final _repeatTrack = ValueNotifier<bool>(false);
   final _likeTrack = ValueNotifier<bool>(false);
+
+  late Size _screenSize;
+  late bool _isMobile;
+  late bool _isTablet;
+  late bool _isDesktop;
 
   late EdgeInsets _viewPadding;
   Future<void> _onImageProviderChanged() async {
@@ -64,6 +70,13 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> {
     super.didChangeDependencies();
     _theme = Theme.of(context);
     _viewPadding = MediaQuery.viewPaddingOf(context);
+
+    _screenSize = MediaQuery.sizeOf(context);
+
+    final deviceType = getDeviceType(_screenSize);
+    _isMobile = deviceType == DeviceScreenType.mobile;
+    _isTablet = deviceType == DeviceScreenType.tablet;
+    _isDesktop = deviceType == DeviceScreenType.desktop;
   }
 
   @override
@@ -98,9 +111,7 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> {
                 // color: Colors.black,
                 padding: EdgeInsets.only(bottom: _viewPadding.bottom),
                 child: GestureDetector(
-                  onTap: () {
-                    _onExpand(currentSong);
-                  },
+                  onTap: !_isDesktop ? () => _onExpand(currentSong): null,
                   behavior: HitTestBehavior.opaque,
                   child: SimpleListTile(
                     padding: const EdgeInsets.only(right: 8),

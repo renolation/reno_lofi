@@ -128,6 +128,53 @@ class _JellyfinApi implements JellyfinApi {
     return value;
   }
 
+  @override
+  Future<AlbumsEntity> getArtists({
+    required String userId,
+    List<String> fields = const ['BackdropImageTags', 'Overview'],
+    bool includeArtists = true,
+    String type = 'Artist',
+    String startIndex = '0',
+    String limit = '100',
+    String sortBy = 'SortName',
+    String sortOrder = 'Descending',
+    bool recursive = true,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'userId': userId,
+      r'Fields': fields,
+      r'IncludeArtists': includeArtists,
+      r'IncludeItemTypes': type,
+      r'StartIndex': startIndex,
+      r'Limit': limit,
+      r'SortBy': sortBy,
+      r'SortOrder': sortOrder,
+      r'Recursive': recursive,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<AlbumsEntity>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/Artists',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AlbumsEntity.fromJson(_result.data!);
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

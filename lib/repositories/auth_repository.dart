@@ -20,11 +20,13 @@ class AuthRepository {
       host: 'music.renolation.com',
       path: '/Users/AuthenticateByName',
     ).toString();
+
     print(url);
-    var data = {"Username": "renolation", "Pw": "renolation"};
-    print(data);
-    dev.log(client.options.headers.toString());
-    final response = await client.post(url, data: data, cancelToken: cancelToken);
+    // var data = {"Username": "renolation", "Pw": "renolation"};
+    // print(data);
+    // dev.log(client.options.headers.toString());
+    print('cac');
+    final response = await client.post(url, data: userCredentials.toJson(), cancelToken: cancelToken);
     print(response.statusCode);
     return (response.data["User"]["Id"] as String, response.data["AccessToken"] as String);
   }

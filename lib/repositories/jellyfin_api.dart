@@ -37,11 +37,25 @@ abstract class JellyfinApi {
       {@Path('userId') required String userId,
       @Query('ParentId') required String albumId,
       @Query('IncludeItemTypes') String includeType = 'music'});
+
+  @GET('/Artists')
+  Future<AlbumsEntity> getArtists({
+    @Query('userId') required String userId,
+    @Query('Fields') List<String> fields = const ['BackdropImageTags', 'Overview'],
+    @Query('IncludeArtists') bool includeArtists = true,
+    @Query('IncludeItemTypes') String type = 'Artist',
+    @Query('StartIndex') String startIndex = '0',
+    @Query('Limit') String limit = '100',
+    @Query('SortBy') String sortBy = 'SortName',
+    @Query('SortOrder') String sortOrder = 'Descending',
+    @Query('Recursive') bool recursive = true,
+  });
+
 }
 
 Provider<JellyfinApi> jellyfinApiProvider = Provider<JellyfinApi>(
   (ref) => JellyfinApi(
     ref.watch(dioProvider),
-    baseUrl: ref.watch(baseUrlProvider) ?? 'https://music.renolation.com',
+    baseUrl: ref.watch(baseUrlProvider)!,
   ),
 );

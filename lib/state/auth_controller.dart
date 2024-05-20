@@ -11,6 +11,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../domains/domains.dart';
 import '../repositories/auth_repository.dart';
+import '../repositories/jellyfin_api.dart';
 import 'base_url_provider.dart';
 import 'current_user_provider.dart';
 import 'dio_provider.dart';
@@ -63,10 +64,26 @@ class AuthController extends _$AuthController {
     }
   }
 
-  Future<void> login(String email, String password) async {
-    // final result = await Future.delayed(networkRoundTripTime, () => _dummyUser);
-    // state = AsyncData(result);
+Future<void> checkAuthState() async {
+  state = const AsyncLoading();
+  final savedToken = await _storage.read(key: _tokenKey);
+  final savedUserId = await _storage.read(key: _userIdKey);
+  final savedBaseUrl = await _storage.read(key: _serverUrlKey);
+  ref.read(baseUrlProvider.notifier).state = savedBaseUrl;
+  if (savedBaseUrl == null) {
+    state = const AsyncData(Auth.signedOut());
+    return;
   }
+  final tokenValidated = _validateAuthToken(savedToken, savedUserId ?? '');
+
+  if (tokenValidated) {
+    ref.read(currentUserProvider.notifier).state = CurrentUser(userId: savedUserId!, token: savedToken!);
+    _setAuthHeader(savedToken);
+  }
+  // if (state.value == tokenValidated) return;
+  state = AsyncValue<Auth>.data(Auth.signedIn(id: savedUserId!, token: savedToken!));
+}
+
 
   Future<String?> signIn(UserCredentials userCredentials) async{
     final authRepo = ref.watch(authRepositoryProvider);
@@ -75,6 +92,7 @@ class AuthController extends _$AuthController {
       userCredentials,
       cancelToken: cancelToken,
     );
+    print('cacacaca');
     await _storage.write(key: _tokenKey, value: token);
     await _storage.write(key: _userIdKey, value: id);
     await _storage.write(key: _serverUrlKey, value: userCredentials.serverUrl);
@@ -96,9 +114,11 @@ class AuthController extends _$AuthController {
 
     // if (exp == null) return true;
     var tokenValid = false;
+    final jellyApi = ref.watch(jellyfinApiProvider);
+
     try {
       _setAuthHeader(token!);
-      // _api.getArtists(userId: userId);
+      jellyApi.getArtists(userId: userId);
       tokenValid = true;
       _removeAuthHeader();
     } catch (e) {
