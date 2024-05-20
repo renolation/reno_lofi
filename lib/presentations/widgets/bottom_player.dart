@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:reno_music/domains/domains.dart';
 import 'package:reno_music/presentations/widgets/simple_list_tile.dart';
 import 'package:reno_music/state/playback_provider.dart';
@@ -41,6 +42,14 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> {
         brightness: _theme.brightness,
       );
     }
+  }
+
+  Future<void> _onExpand(MediaItem? currentSong) {
+    return showCupertinoModalBottomSheet(
+      context: context,
+      expand: true,
+      builder: (context) => Container(),
+    );
   }
 
   @override
@@ -86,9 +95,12 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> {
               return Container(
                 height: (69) + _viewPadding.bottom,
                 color: _theme.bottomSheetTheme.backgroundColor?.withOpacity(0.75),
+                // color: Colors.black,
                 padding: EdgeInsets.only(bottom: _viewPadding.bottom),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    _onExpand(currentSong);
+                  },
                   behavior: HitTestBehavior.opaque,
                   child: SimpleListTile(
                     padding: const EdgeInsets.only(right: 8),
@@ -154,7 +166,7 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> {
             ? ref.read(playbackNotifierProvider.notifier).pause()
             : ref.read(playbackNotifierProvider.notifier).resume(),
         background: _theme.colorScheme.onPrimary,
-        foreground: _theme.scaffoldBackgroundColor,
+        foreground: _theme.colorScheme.secondary,
         stateNotifier: _isPlaying,
       );
 
