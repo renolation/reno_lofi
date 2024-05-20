@@ -45,9 +45,9 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> {
   }
 
   Future<void> _onExpand(MediaItem? currentSong) {
-    return showCupertinoModalBottomSheet(
+    return showModalBottomSheet(
       context: context,
-      expand: true,
+      isScrollControlled: true,
       builder: (context) => Container(),
     );
   }
