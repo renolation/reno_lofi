@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:reno_music/state/auth_controller.dart';
 import 'package:reno_music/state/playback_provider.dart';
 
 import '../../domains/domains.dart';
@@ -56,7 +57,7 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
   }
 
   void _getSongs() {
-    ref.read(jellyfinApiProvider).getSongs(userId: ref.read(currentUserProvider.notifier).state!.userId, albumId: widget.album.id).then((value) {
+    ref.read(jellyfinApiProvider).getSongs(userId: ref.read(currentUserProvider)!, albumId: widget.album.id).then((value) {
       setState(() {
         final items = [...value.items]..sort((a, b) => a.indexNumber.compareTo(b.indexNumber));
         songs = items;

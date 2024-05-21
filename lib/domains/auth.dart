@@ -8,12 +8,15 @@ part 'auth.freezed.dart';
 sealed class Auth with _$Auth {
   const factory Auth.signedIn({
     required String id,
-    required String token,
   }) = SignedIn;
+
   const Auth._();
+
   const factory Auth.signedOut() = SignedOut;
+
   bool get isAuth => switch (this) {
-    SignedIn() => true,
-    SignedOut() => false,
-  };
+        SignedIn() => true,
+        SignedOut() => false,
+      };
+
 }

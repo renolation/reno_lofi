@@ -7,7 +7,7 @@ part of 'albums_libraries_provider.dart';
 // **************************************************************************
 
 String _$albumsLibrariesProviderHash() =>
-    r'a0c659e24d1a0c797d62b181cd926c217561d87c';
+    r'3e1975144551caea816917ecfd4dd2009ae54c21';
 
 /// See also [AlbumsLibrariesProvider].
 @ProviderFor(AlbumsLibrariesProvider)

@@ -10,6 +10,8 @@ import '../../state/current_user_provider.dart';
 import '../../state/secure_storage_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../state/auth_controller.dart';
+
 part 'list_library_provider.g.dart';
 
 @riverpod
@@ -21,7 +23,7 @@ class ListLibraryProvider extends _$ListLibraryProvider {
   @override
   FutureOr<List<LibraryEntity>> build() async {
     _api = ref.read(jellyfinApiProvider);
-    _userId = ref.read(currentUserProvider)!.userId;
+    _userId = ref.read(currentUserProvider)!;
     return fetchLibraries();
   }
 

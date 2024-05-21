@@ -14,7 +14,7 @@ class AuthRepository {
 
   final Dio client;
 
-  Future<(String, String)> signIn(UserCredentials userCredentials, {CancelToken? cancelToken}) async {
+  Future<String> signIn(UserCredentials userCredentials, {CancelToken? cancelToken}) async {
     final url = Uri(
       scheme: 'https',
       host: 'music.renolation.com',
@@ -28,7 +28,7 @@ class AuthRepository {
     print('cac');
     final response = await client.post(url, data: userCredentials.toJson(), cancelToken: cancelToken);
     print(response.statusCode);
-    return (response.data["User"]["Id"] as String, response.data["AccessToken"] as String);
+    return (response.data["User"]["Id"] as String);
   }
 }
 

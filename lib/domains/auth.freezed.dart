@@ -18,19 +18,19 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Auth {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String id, String token) signedIn,
+    required TResult Function(String id) signedIn,
     required TResult Function() signedOut,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String id, String token)? signedIn,
+    TResult? Function(String id)? signedIn,
     TResult? Function()? signedOut,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String id, String token)? signedIn,
+    TResult Function(String id)? signedIn,
     TResult Function()? signedOut,
     required TResult orElse(),
   }) =>
@@ -79,7 +79,7 @@ abstract class _$$SignedInImplCopyWith<$Res> {
           _$SignedInImpl value, $Res Function(_$SignedInImpl) then) =
       __$$SignedInImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String id, String token});
+  $Res call({String id});
 }
 
 /// @nodoc
@@ -94,16 +94,11 @@ class __$$SignedInImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? token = null,
   }) {
     return _then(_$SignedInImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      token: null == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -112,16 +107,14 @@ class __$$SignedInImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SignedInImpl extends SignedIn {
-  const _$SignedInImpl({required this.id, required this.token}) : super._();
+  const _$SignedInImpl({required this.id}) : super._();
 
   @override
   final String id;
-  @override
-  final String token;
 
   @override
   String toString() {
-    return 'Auth.signedIn(id: $id, token: $token)';
+    return 'Auth.signedIn(id: $id)';
   }
 
   @override
@@ -129,12 +122,11 @@ class _$SignedInImpl extends SignedIn {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SignedInImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.token, token) || other.token == token));
+            (identical(other.id, id) || other.id == id));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, token);
+  int get hashCode => Object.hash(runtimeType, id);
 
   @JsonKey(ignore: true)
   @override
@@ -145,30 +137,30 @@ class _$SignedInImpl extends SignedIn {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String id, String token) signedIn,
+    required TResult Function(String id) signedIn,
     required TResult Function() signedOut,
   }) {
-    return signedIn(id, token);
+    return signedIn(id);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String id, String token)? signedIn,
+    TResult? Function(String id)? signedIn,
     TResult? Function()? signedOut,
   }) {
-    return signedIn?.call(id, token);
+    return signedIn?.call(id);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String id, String token)? signedIn,
+    TResult Function(String id)? signedIn,
     TResult Function()? signedOut,
     required TResult orElse(),
   }) {
     if (signedIn != null) {
-      return signedIn(id, token);
+      return signedIn(id);
     }
     return orElse();
   }
@@ -206,12 +198,10 @@ class _$SignedInImpl extends SignedIn {
 }
 
 abstract class SignedIn extends Auth {
-  const factory SignedIn(
-      {required final String id, required final String token}) = _$SignedInImpl;
+  const factory SignedIn({required final String id}) = _$SignedInImpl;
   const SignedIn._() : super._();
 
   String get id;
-  String get token;
   @JsonKey(ignore: true)
   _$$SignedInImplCopyWith<_$SignedInImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -255,7 +245,7 @@ class _$SignedOutImpl extends SignedOut {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String id, String token) signedIn,
+    required TResult Function(String id) signedIn,
     required TResult Function() signedOut,
   }) {
     return signedOut();
@@ -264,7 +254,7 @@ class _$SignedOutImpl extends SignedOut {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String id, String token)? signedIn,
+    TResult? Function(String id)? signedIn,
     TResult? Function()? signedOut,
   }) {
     return signedOut?.call();
@@ -273,7 +263,7 @@ class _$SignedOutImpl extends SignedOut {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String id, String token)? signedIn,
+    TResult Function(String id)? signedIn,
     TResult Function()? signedOut,
     required TResult orElse(),
   }) {

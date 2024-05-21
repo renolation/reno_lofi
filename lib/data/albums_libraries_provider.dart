@@ -21,7 +21,7 @@ class AlbumsLibrariesProvider  extends _$AlbumsLibrariesProvider{
   FutureOr<List<ItemEntity>> build() async {
     _api = ref.read(jellyfinApiProvider);
     _storage = ref.read(secureStorageProvider);
-    _userId = ref.read(currentUserProvider)!.userId;
+    _userId = ref.read(currentUserProvider)!;
     return fetchAlbums();
   }
 

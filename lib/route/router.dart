@@ -51,8 +51,8 @@ GoRouter router(RouterRef ref) {
           builder: (context, state) => const LoginPage(),
         ),
         StatefulShellRoute.indexedStack(
-            builder: (BuildContext context, GoRouterState state, StatefulNavigationShell navigationShell) {
-              return MainPage(navigationShell: navigationShell);
+            pageBuilder: (BuildContext context, GoRouterState state, StatefulNavigationShell navigationShell) {
+              return NoTransitionPage(child: MainPage(navigationShell: navigationShell));
             },
             branches: <StatefulShellBranch>[
               StatefulShellBranch(navigatorKey: _sectionMainNavKey, routes: <RouteBase>[
@@ -98,6 +98,7 @@ GoRouter router(RouterRef ref) {
             ]),
       ],
       redirect: (context, state) {
+        print(isAuth.value);
         if (isAuth.value.unwrapPrevious().hasError) return Routes.login;
         if (isAuth.value.isLoading || !isAuth.value.hasValue) return Routes.splash;
 

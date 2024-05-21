@@ -59,10 +59,15 @@ class MyApp extends ConsumerWidget {
       routerConfig: router,
       title: 'Flutter Demo',
       themeMode: ThemeMode.dark,
+
       theme: ThemeData(
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          // ···
+          brightness: Brightness.dark,
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:reno_music/domains/domains.dart';
+import 'package:reno_music/state/auth_controller.dart';
 import 'package:reno_music/state/base_url_provider.dart';
 import 'package:reno_music/state/player_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -72,8 +73,8 @@ class PlaybackNotifier extends _$PlaybackNotifier {
             port: domainUri.port,
             path: 'Audio/${song.id}/universal',
             queryParameters: {
-              'UserId': ref.read(currentUserProvider)!.userId,
-              'api_key': ref.read(currentUserProvider)!.token,
+              'UserId': ref.read(currentUserProvider)!,
+              // 'api_key': ref.read(currentUserProvider)!.token,
               'DeviceId': '12345',
               'TranscodingProtocol': 'http',
               'TranscodingContainer': 'm4a',
@@ -95,22 +96,6 @@ class PlaybackNotifier extends _$PlaybackNotifier {
           ),),
 
       ]);
-      AudioSource a = AudioSource.uri(Uri(
-        scheme: domainUri.scheme,
-        host: domainUri.host,
-        port: domainUri.port,
-        path: 'Audio/${listSong[0].id}/universal',
-        queryParameters: {
-          'UserId': ref.read(currentUserProvider)!.userId,
-          'api_key': ref.read(currentUserProvider)!.token,
-          'DeviceId': '12345',
-          'TranscodingProtocol': 'http',
-          'TranscodingContainer': 'm4a',
-          'AudioCodec': 'm4a',
-          'Container': 'mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav,m4a,aiff,aif',
-        },
-      ));
-      print(a);
       await _audioPlayer.setAudioSource(playlist, initialIndex: listSong.indexOf(songEntity), preload: false);
       unawaited(_audioPlayer.play());
       state = PlaybackState(
