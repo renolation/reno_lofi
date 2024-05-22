@@ -7,7 +7,7 @@ part of 'artists_libraries_provider.dart';
 // **************************************************************************
 
 String _$artistsLibrariesProviderHash() =>
-    r'bf5e9b016b6109d54ed95c85f84e789ef975a33c';
+    r'f273f6f527c24c04eb3c7ea6a9ec573ac38ba107';
 
 /// See also [ArtistsLibrariesProvider].
 @ProviderFor(ArtistsLibrariesProvider)

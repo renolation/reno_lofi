@@ -24,8 +24,9 @@ class ArtistsLibrariesProvider extends _$ArtistsLibrariesProvider{
 
   Future<void> loadMore() async {
     ArtistState artistState = state.value!;
-    final albums = await ref.read(jellyfinApiProvider).getArtists(userId: ref.read(currentUserProvider)!, startIndex: '${(artistState.currentPage * limitPerCall)}');
-    state = AsyncData(artistState.copyWith(items: [...artistState.items, ...albums.items], currentPage:  artistState.currentPage + 1));
+    final artists = await ref.read(jellyfinApiProvider).getArtists(userId: ref.read(currentUserProvider)!, startIndex: '${(artistState.currentPage * limitPerCall)}');
+    if(artists.items.isEmpty) return;
+    state = AsyncData(artistState.copyWith(items: [...artistState.items, ...artists.items], currentPage:  artistState.currentPage + 1));
   }
 
 }

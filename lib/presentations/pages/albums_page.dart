@@ -97,6 +97,15 @@ class AlbumsPage extends HookConsumerWidget {
       return items;
     }
 
+    Future<void> loadMore()async {
+      //todo: add check empty result and block call new
+      await switch(_currentView.value){
+        ListenView.albums =>  ref.read(albumsLibrariesProviderProvider.notifier).loadMore(),
+        ListenView.artists =>  ref.read(albumsLibrariesProviderProvider.notifier).loadMore(),
+      };
+
+    }
+
     return ScrollablePageScaffold(
       useGradientBackground: true,
       navigationBar: PreferredSize(
@@ -207,6 +216,7 @@ class AlbumsPage extends HookConsumerWidget {
         right: _isMobile ? 16 : 30,
         bottom: 30,
       ),
+      loadMoreData: loadMore,
       slivers: [
         ValueListenableBuilder(
             valueListenable: _currentView,

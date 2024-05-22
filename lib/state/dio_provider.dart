@@ -21,4 +21,4 @@ Dio dio(DioRef ref) {
 
 
 //todo: update
-const int limitPerCall = 40;
+const int limitPerCall = 100;

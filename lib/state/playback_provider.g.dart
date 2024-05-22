@@ -6,7 +6,7 @@ part of 'playback_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$playbackNotifierHash() => r'3996b15801c65c9445675c5905376502d9f0d5a8';
+String _$playbackNotifierHash() => r'5aeb9aa8f2c95fd543879c2dfe185e1ab1fa9b0c';
 
 /// See also [PlaybackNotifier].
 @ProviderFor(PlaybackNotifier)

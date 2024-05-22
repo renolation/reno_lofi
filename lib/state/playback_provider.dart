@@ -74,8 +74,6 @@ class PlaybackNotifier extends _$PlaybackNotifier {
             path: 'Audio/${song.id}/universal',
             queryParameters: {
               'UserId': ref.read(currentUserProvider)!,
-              // 'api_key': ref.read(currentUserProvider)!.token,
-              'DeviceId': '12345',
               'TranscodingProtocol': 'http',
               'TranscodingContainer': 'm4a',
               'AudioCodec': 'm4a',

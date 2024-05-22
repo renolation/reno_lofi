@@ -27,6 +27,7 @@ class AlbumsLibrariesProvider  extends _$AlbumsLibrariesProvider{
   Future<void> loadMore() async {
     AlbumsState albumsState = state.value!;
     final albums = await ref.read(jellyfinApiProvider).getAlbums(userId: ref.read(currentUserProvider)!, libraryId: ref.read(selectingLibraryControllerProvider)!.id, startIndex: '${(albumsState.currentPage * limitPerCall)}');
+    if(albums.items.isEmpty) return;
     state = AsyncData(albumsState.copyWith(items: [...albumsState.items, ...albums.items], currentPage:  albumsState.currentPage + 1));
   }
 }
