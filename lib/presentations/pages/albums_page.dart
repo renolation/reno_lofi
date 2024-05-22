@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:reno_music/data/artists_libraries_provider.dart';
 import 'package:reno_music/data/current_album_controller.dart';
 import 'package:reno_music/presentations/views/albums_view.dart';
 import 'package:reno_music/state/scrollable_page_scaffold.dart';
@@ -72,6 +73,18 @@ class AlbumsPage extends HookConsumerWidget {
                     })
                 ],
               )),
+              TextButton(
+                onPressed: () {
+                  ref.read(albumsLibrariesProviderProvider.notifier).loadMore();
+                },
+                child: Text('Button'),
+              ),
+              TextButton(
+                onPressed: () {
+                  ref.read(artistsLibrariesProviderProvider.notifier).loadMore();
+                },
+                child: Text('Button'),
+              ),
             ],
           ),
         ),
@@ -92,7 +105,7 @@ class AlbumsPage extends HookConsumerWidget {
                     return data.when(
                       data: (data) {
                         return SliverGrid.builder(
-                            itemCount: data.length,
+                            itemCount: data.items.length,
                             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                               maxCrossAxisExtent: _isTablet ? 360 : 200,
                               mainAxisSpacing: _isMobile ? 15 : 24,
@@ -100,7 +113,7 @@ class AlbumsPage extends HookConsumerWidget {
                               childAspectRatio: _isTablet ? 360 / 413 : 175 / 215.7,
                             ),
                             itemBuilder: (context, index) {
-                              final ItemEntity item = data[index];
+                              final ItemEntity item = data.items[index];
                               return AlbumsView(album: item,
                                 onTap: (){
                                   final location = GoRouterState.of(context).fullPath;
@@ -124,7 +137,42 @@ class AlbumsPage extends HookConsumerWidget {
                     );
                   });
                 case ListenView.artists:
-                  return const SliverToBoxAdapter(child: Text('artist'));
+                  return Consumer(builder: (context, ref, child) {
+                    final data = ref.watch(artistsLibrariesProviderProvider);
+                    return data.when(
+                      data: (data) {
+                        return SliverGrid.builder(
+                            itemCount: data.items.length,
+                            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: _isTablet ? 360 : 200,
+                              mainAxisSpacing: _isMobile ? 15 : 24,
+                              crossAxisSpacing: _isMobile ? 8 : (_isTablet ? 56 : 28),
+                              childAspectRatio: _isTablet ? 360 / 413 : 175 / 215.7,
+                            ),
+                            itemBuilder: (context, index) {
+                              final ItemEntity item = data.items[index];
+                              return AlbumsView(album: item,
+                                onTap: (){
+                                  // final location = GoRouterState.of(context).fullPath;
+                                  // ref.read(currentAlbumControllerProvider.notifier).setAlbum(item);
+                                  // context.go('$location${Routes.album}', extra: {'album': item});
+                                },
+                              );
+                              return InkWell(
+                                  onTap: () {
+                                    // context.goNamed('album');
+                                    final location = GoRouterState.of(context).fullPath;
+                                    // ref.read(currentAlbumProvider.notifier).setAlbum(album);
+                                    context.go('$location/album', extra: {'album': item});
+                                  },
+                                  child: Text(item.name));
+                            });
+                      },
+                      error: (error, stackTrace) => SliverToBoxAdapter(child: Text(error.toString())),
+                      loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
+
+                    );
+                  });
               }
             }),
       ],

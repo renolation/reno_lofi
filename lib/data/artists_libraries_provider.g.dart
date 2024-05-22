@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'albums_libraries_provider.dart';
+part of 'artists_libraries_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumsLibrariesProviderHash() =>
-    r'a208343b96b37ce001cfe0b85b1051682731c886';
+String _$artistsLibrariesProviderHash() =>
+    r'bf5e9b016b6109d54ed95c85f84e789ef975a33c';
 
-/// See also [AlbumsLibrariesProvider].
-@ProviderFor(AlbumsLibrariesProvider)
-final albumsLibrariesProviderProvider =
-    AsyncNotifierProvider<AlbumsLibrariesProvider, AlbumsState>.internal(
-  AlbumsLibrariesProvider.new,
-  name: r'albumsLibrariesProviderProvider',
+/// See also [ArtistsLibrariesProvider].
+@ProviderFor(ArtistsLibrariesProvider)
+final artistsLibrariesProviderProvider =
+    AsyncNotifierProvider<ArtistsLibrariesProvider, ArtistState>.internal(
+  ArtistsLibrariesProvider.new,
+  name: r'artistsLibrariesProviderProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$albumsLibrariesProviderHash,
+      : _$artistsLibrariesProviderHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AlbumsLibrariesProvider = AsyncNotifier<AlbumsState>;
+typedef _$ArtistsLibrariesProvider = AsyncNotifier<ArtistState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

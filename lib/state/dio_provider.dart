@@ -18,3 +18,7 @@ Dio dio(DioRef ref) {
   dio.interceptors.add(LoggerInterceptor());
   return dio;
 }
+
+
+//todo: update
+const int limitPerCall = 40;
