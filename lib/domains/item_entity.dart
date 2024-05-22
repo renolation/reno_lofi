@@ -15,7 +15,7 @@ class ItemEntity with _$ItemEntity {
     @JsonKey(name: 'RunTimeTicks') required int? durationInTicks,
     @JsonKey(name: 'ProductionYear') int? productionYear,
     @JsonKey(name: 'AlbumArtist') String? albumArtist,
-    @Default([]) @JsonKey(name: 'BackdropImageTags') List<String> backgropImageTags,
+    @Default([]) @JsonKey(name: 'BackdropImageTags') List<String> backdropImageTags,
     @Default({}) @JsonKey(name: 'ImageTags') Map<String, String> imageTags,
   }) = _ItemEntity;
   const ItemEntity._();

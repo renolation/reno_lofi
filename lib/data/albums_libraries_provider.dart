@@ -14,26 +14,19 @@ part 'albums_libraries_provider.g.dart';
 @Riverpod(keepAlive: true)
 class AlbumsLibrariesProvider  extends _$AlbumsLibrariesProvider{
 
-  late final JellyfinApi _api;
-  late final String _userId;
-  late final String _libId;
-
   @override
   FutureOr<AlbumsState> build() async {
-    _api = ref.read(jellyfinApiProvider);
-    _userId = ref.read(currentUserProvider)!;
-    _libId = ref.read(selectingLibraryControllerProvider)!.id;
     return fetchAlbums();
   }
 
   FutureOr<AlbumsState> fetchAlbums() async  {
-    final albums = await _api.getAlbums(userId: _userId, libraryId: _libId, startIndex: '0');
+    final albums = await ref.read(jellyfinApiProvider).getAlbums(userId: ref.read(currentUserProvider)!, libraryId: ref.read(selectingLibraryControllerProvider)!.id, startIndex: '0');
     return AlbumsState(items: albums.items, currentPage: 1);
   }
 
   Future<void> loadMore() async {
     AlbumsState albumsState = state.value!;
-    final albums = await _api.getAlbums(userId: _userId, libraryId: _libId, startIndex: '${(albumsState.currentPage * limitPerCall)}');
+    final albums = await ref.read(jellyfinApiProvider).getAlbums(userId: ref.read(currentUserProvider)!, libraryId: ref.read(selectingLibraryControllerProvider)!.id, startIndex: '${(albumsState.currentPage * limitPerCall)}');
     state = AsyncData(albumsState.copyWith(items: [...albumsState.items, ...albums.items], currentPage:  albumsState.currentPage + 1));
   }
 }

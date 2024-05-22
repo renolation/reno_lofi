@@ -37,7 +37,7 @@ mixin _$ItemEntity {
   @JsonKey(name: 'AlbumArtist')
   String? get albumArtist => throw _privateConstructorUsedError;
   @JsonKey(name: 'BackdropImageTags')
-  List<String> get backgropImageTags => throw _privateConstructorUsedError;
+  List<String> get backdropImageTags => throw _privateConstructorUsedError;
   @JsonKey(name: 'ImageTags')
   Map<String, String> get imageTags => throw _privateConstructorUsedError;
 
@@ -62,7 +62,7 @@ abstract class $ItemEntityCopyWith<$Res> {
       @JsonKey(name: 'RunTimeTicks') int? durationInTicks,
       @JsonKey(name: 'ProductionYear') int? productionYear,
       @JsonKey(name: 'AlbumArtist') String? albumArtist,
-      @JsonKey(name: 'BackdropImageTags') List<String> backgropImageTags,
+      @JsonKey(name: 'BackdropImageTags') List<String> backdropImageTags,
       @JsonKey(name: 'ImageTags') Map<String, String> imageTags});
 }
 
@@ -87,7 +87,7 @@ class _$ItemEntityCopyWithImpl<$Res, $Val extends ItemEntity>
     Object? durationInTicks = freezed,
     Object? productionYear = freezed,
     Object? albumArtist = freezed,
-    Object? backgropImageTags = null,
+    Object? backdropImageTags = null,
     Object? imageTags = null,
   }) {
     return _then(_value.copyWith(
@@ -123,9 +123,9 @@ class _$ItemEntityCopyWithImpl<$Res, $Val extends ItemEntity>
           ? _value.albumArtist
           : albumArtist // ignore: cast_nullable_to_non_nullable
               as String?,
-      backgropImageTags: null == backgropImageTags
-          ? _value.backgropImageTags
-          : backgropImageTags // ignore: cast_nullable_to_non_nullable
+      backdropImageTags: null == backdropImageTags
+          ? _value.backdropImageTags
+          : backdropImageTags // ignore: cast_nullable_to_non_nullable
               as List<String>,
       imageTags: null == imageTags
           ? _value.imageTags
@@ -152,7 +152,7 @@ abstract class _$$ItemEntityImplCopyWith<$Res>
       @JsonKey(name: 'RunTimeTicks') int? durationInTicks,
       @JsonKey(name: 'ProductionYear') int? productionYear,
       @JsonKey(name: 'AlbumArtist') String? albumArtist,
-      @JsonKey(name: 'BackdropImageTags') List<String> backgropImageTags,
+      @JsonKey(name: 'BackdropImageTags') List<String> backdropImageTags,
       @JsonKey(name: 'ImageTags') Map<String, String> imageTags});
 }
 
@@ -175,7 +175,7 @@ class __$$ItemEntityImplCopyWithImpl<$Res>
     Object? durationInTicks = freezed,
     Object? productionYear = freezed,
     Object? albumArtist = freezed,
-    Object? backgropImageTags = null,
+    Object? backdropImageTags = null,
     Object? imageTags = null,
   }) {
     return _then(_$ItemEntityImpl(
@@ -211,9 +211,9 @@ class __$$ItemEntityImplCopyWithImpl<$Res>
           ? _value.albumArtist
           : albumArtist // ignore: cast_nullable_to_non_nullable
               as String?,
-      backgropImageTags: null == backgropImageTags
-          ? _value._backgropImageTags
-          : backgropImageTags // ignore: cast_nullable_to_non_nullable
+      backdropImageTags: null == backdropImageTags
+          ? _value._backdropImageTags
+          : backdropImageTags // ignore: cast_nullable_to_non_nullable
               as List<String>,
       imageTags: null == imageTags
           ? _value._imageTags
@@ -236,10 +236,10 @@ class _$ItemEntityImpl extends _ItemEntity {
       @JsonKey(name: 'ProductionYear') this.productionYear,
       @JsonKey(name: 'AlbumArtist') this.albumArtist,
       @JsonKey(name: 'BackdropImageTags')
-      final List<String> backgropImageTags = const [],
+      final List<String> backdropImageTags = const [],
       @JsonKey(name: 'ImageTags')
       final Map<String, String> imageTags = const {}})
-      : _backgropImageTags = backgropImageTags,
+      : _backdropImageTags = backdropImageTags,
         _imageTags = imageTags,
         super._();
 
@@ -270,14 +270,14 @@ class _$ItemEntityImpl extends _ItemEntity {
   @override
   @JsonKey(name: 'AlbumArtist')
   final String? albumArtist;
-  final List<String> _backgropImageTags;
+  final List<String> _backdropImageTags;
   @override
   @JsonKey(name: 'BackdropImageTags')
-  List<String> get backgropImageTags {
-    if (_backgropImageTags is EqualUnmodifiableListView)
-      return _backgropImageTags;
+  List<String> get backdropImageTags {
+    if (_backdropImageTags is EqualUnmodifiableListView)
+      return _backdropImageTags;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_backgropImageTags);
+    return EqualUnmodifiableListView(_backdropImageTags);
   }
 
   final Map<String, String> _imageTags;
@@ -291,7 +291,7 @@ class _$ItemEntityImpl extends _ItemEntity {
 
   @override
   String toString() {
-    return 'ItemEntity(id: $id, name: $name, serverId: $serverId, type: $type, overview: $overview, durationInTicks: $durationInTicks, productionYear: $productionYear, albumArtist: $albumArtist, backgropImageTags: $backgropImageTags, imageTags: $imageTags)';
+    return 'ItemEntity(id: $id, name: $name, serverId: $serverId, type: $type, overview: $overview, durationInTicks: $durationInTicks, productionYear: $productionYear, albumArtist: $albumArtist, backdropImageTags: $backdropImageTags, imageTags: $imageTags)';
   }
 
   @override
@@ -313,7 +313,7 @@ class _$ItemEntityImpl extends _ItemEntity {
             (identical(other.albumArtist, albumArtist) ||
                 other.albumArtist == albumArtist) &&
             const DeepCollectionEquality()
-                .equals(other._backgropImageTags, _backgropImageTags) &&
+                .equals(other._backdropImageTags, _backdropImageTags) &&
             const DeepCollectionEquality()
                 .equals(other._imageTags, _imageTags));
   }
@@ -330,7 +330,7 @@ class _$ItemEntityImpl extends _ItemEntity {
       durationInTicks,
       productionYear,
       albumArtist,
-      const DeepCollectionEquality().hash(_backgropImageTags),
+      const DeepCollectionEquality().hash(_backdropImageTags),
       const DeepCollectionEquality().hash(_imageTags));
 
   @JsonKey(ignore: true)
@@ -357,7 +357,7 @@ abstract class _ItemEntity extends ItemEntity {
       @JsonKey(name: 'RunTimeTicks') required final int? durationInTicks,
       @JsonKey(name: 'ProductionYear') final int? productionYear,
       @JsonKey(name: 'AlbumArtist') final String? albumArtist,
-      @JsonKey(name: 'BackdropImageTags') final List<String> backgropImageTags,
+      @JsonKey(name: 'BackdropImageTags') final List<String> backdropImageTags,
       @JsonKey(name: 'ImageTags')
       final Map<String, String> imageTags}) = _$ItemEntityImpl;
   const _ItemEntity._() : super._();
@@ -391,7 +391,7 @@ abstract class _ItemEntity extends ItemEntity {
   String? get albumArtist;
   @override
   @JsonKey(name: 'BackdropImageTags')
-  List<String> get backgropImageTags;
+  List<String> get backdropImageTags;
   @override
   @JsonKey(name: 'ImageTags')
   Map<String, String> get imageTags;

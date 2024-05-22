@@ -16,7 +16,7 @@ _$ItemEntityImpl _$$ItemEntityImplFromJson(Map<String, dynamic> json) =>
       durationInTicks: (json['RunTimeTicks'] as num?)?.toInt(),
       productionYear: (json['ProductionYear'] as num?)?.toInt(),
       albumArtist: json['AlbumArtist'] as String?,
-      backgropImageTags: (json['BackdropImageTags'] as List<dynamic>?)
+      backdropImageTags: (json['BackdropImageTags'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -36,6 +36,6 @@ Map<String, dynamic> _$$ItemEntityImplToJson(_$ItemEntityImpl instance) =>
       'RunTimeTicks': instance.durationInTicks,
       'ProductionYear': instance.productionYear,
       'AlbumArtist': instance.albumArtist,
-      'BackdropImageTags': instance.backgropImageTags,
+      'BackdropImageTags': instance.backdropImageTags,
       'ImageTags': instance.imageTags,
     };
