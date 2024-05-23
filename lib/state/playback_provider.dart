@@ -67,6 +67,7 @@ class PlaybackNotifier extends _$PlaybackNotifier {
 
       final playlist = ConcatenatingAudioSource(children: [
         for (final song in listSong)
+
           AudioSource.uri(Uri(
             scheme: domainUri.scheme,
             host: domainUri.host,
@@ -85,16 +86,23 @@ class PlaybackNotifier extends _$PlaybackNotifier {
             artist: album.albumArtist,
             duration: Duration(milliseconds: (song.runTimeTicks / 10000).ceil()),
             title: song.name ?? 'Untitled',
+
             artUri:
             song.imageTags['Primary'] != null
                 ? Uri.parse(ref.read(imageProvider).imagePath(tagId: song.imageTags['Primary']!, id: song.id))
                 : album.imageTags['Primary'] != null
                 ? Uri.parse(ref.read(imageProvider).imagePath(tagId: album.imageTags['Primary']!, id: album.id))
                 : null,
-          ),),
+          ),
+          headers: {
+            'Authorization':
+            'MediaBrowser Token="0aeeaf005a3f4d96af081e9e3f61ff1d"'
+          }),
 
       ]);
+
       await _audioPlayer.setAudioSource(playlist, initialIndex: listSong.indexOf(songEntity), preload: false);
+
       unawaited(_audioPlayer.play());
       state = PlaybackState(
         status: PlaybackStatus.playing,
