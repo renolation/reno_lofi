@@ -18,7 +18,6 @@ import 'dio_provider.dart';
 
 part 'auth_controller.g.dart';
 
-
 @riverpod
 class AuthController extends _$AuthController {
   // late SharedPreferences _sharedPreferences;
@@ -65,26 +64,6 @@ class AuthController extends _$AuthController {
     final savedBaseUrl = await _storage.read(key: _serverUrlKey);
     return (savedUserId, savedBaseUrl);
   }
-
-Future<void> checkAuthState() async {
-  state = const AsyncLoading();
-  // final savedToken = await _storage.read(key: _tokenKey);
-  final savedUserId = await _storage.read(key: _userIdKey);
-  final savedBaseUrl = await _storage.read(key: _serverUrlKey);
-  ref.read(baseUrlProvider.notifier).state = savedBaseUrl;
-  if (savedBaseUrl == null) {
-    state = const AsyncData(Auth.signedOut());
-    return;
-  }
-  // final tokenValidated = _validateAuthToken(savedToken, savedUserId ?? '');
-
-  // if (tokenValidated) {
-  //   ref.read(currentUserProvider.notifier).state = CurrentUser(userId: savedUserId!, token: savedToken!);
-  //   _setAuthHeader(savedToken);
-  // }
-  // if (tokenValidated) return;
-  // state = AsyncValue<Auth>.data(Auth.signedIn(id: savedUserId!, token: savedToken!));
-}
 
 
   Future<String?> signIn(UserCredentials userCredentials) async{

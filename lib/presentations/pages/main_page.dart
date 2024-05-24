@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reno_music/presentations/widgets/custom_navigation_rail.dart';
 import 'package:reno_music/state/auth_controller.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../resources/resources.dart';
 import '../widgets/bottom_player.dart';
@@ -98,12 +100,12 @@ class _MainPageState extends ConsumerState<MainPage> {
       ),
       bottomNavigationBar: Visibility(
         visible: !_isDesktop,
-        child: BottomNavigationBar(
-          iconSize: _isMobile ? 28 : 24,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Section A'),
-            BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Section B'),
-            BottomNavigationBarItem(icon: Icon(Icons.tab), label: 'Section C'),
+        child: SalomonBottomBar(
+          selectedItemColor: Colors.blueAccent,
+          items: [
+            SalomonBottomBarItem(icon: const Icon(FontAwesomeIcons.house), title: const Text('Home')),
+            SalomonBottomBarItem(icon: const Icon(FontAwesomeIcons.magnifyingGlass),title: const Text('Search')),
+            SalomonBottomBarItem(icon: const Icon(FontAwesomeIcons.gears),title: const Text('Settings')),
           ],
           currentIndex: widget.navigationShell.currentIndex,
           onTap: _onTap,

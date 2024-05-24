@@ -7,6 +7,7 @@ import 'package:reno_music/domains/domains.dart';
 import 'package:reno_music/state/auth_controller.dart';
 import 'package:reno_music/state/base_url_provider.dart';
 import 'package:reno_music/state/player_provider.dart';
+import 'package:reno_music/state/queue_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'current_user_provider.dart';
@@ -152,16 +153,16 @@ class PlaybackNotifier extends _$PlaybackNotifier {
   }
 
   // TODO: audio queue
+
   Future<void> resume() async {
-    // if ((state.status == PlaybackStatus.stopped) && state.totalDuration?.inSeconds == 0) {
-    //   final queue = ref.read(audioQueueProvider.notifier);
-    //   // Case when song has finished but user clicks on play(resume) button. In this case we want to restart playback from first song.
-    //   if (queue.state.songs.isNotEmpty) {
-    //     await play(queue.state.songs.first, queue.state.songs, queue.state.album!);
-    //   }
-    //
-    //   return;
-    // }
+    if ((state.status == PlaybackStatus.stopped) && state.totalDuration?.inSeconds == 0) {
+      final queue = ref.read(audioQueueNotifierProvider.notifier).state;
+      // Case when song has finished but user clicks on play(resume) button. In this case we want to restart playback from first song.
+      if (queue.songs.isNotEmpty) {
+        await play(queue.songs.first, queue.songs, queue.album!);
+      }
+      return;
+    }
 
     // }
     unawaited(_audioPlayer.play());

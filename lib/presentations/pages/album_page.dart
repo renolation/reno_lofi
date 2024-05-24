@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reno_music/presentations/views/player_song_view.dart';
+import 'package:reno_music/presentations/widgets/play_pause_button.dart';
 import 'package:reno_music/state/auth_controller.dart';
 import 'package:reno_music/state/custom_scrollbar.dart';
 import 'package:reno_music/state/gradient_background.dart';
@@ -44,7 +45,7 @@ import '../widgets/play_button.dart';
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         title: Text('Album: ${widget.album.name}'),
+//         title: Text('Album: ${widget.widget.album.name}'),
 //       ),
 //       body: ListView.builder(
 //         itemCount: songs.length,
@@ -68,7 +69,7 @@ import '../widgets/play_button.dart';
 //   }
 //
 //   void _getSongs() {
-//     ref.read(jellyfinApiProvider).getSongs(userId: ref.read(currentUserProvider)!, albumId: widget.album.id).then((value) {
+//     ref.read(jellyfinApiProvider).getSongs(userId: ref.read(currentUserProvider)!, albumId: widget.widget.album.id).then((value) {
 //       setState(() {
 //         final items = [...value.items]..sort((a, b) => a.indexNumber.compareTo(b.indexNumber));
 //         songs = items;
@@ -77,126 +78,151 @@ import '../widgets/play_button.dart';
 //   }
 // }
 
-class AlbumPage extends HookConsumerWidget {
+class AlbumPage extends StatefulHookConsumerWidget {
   const AlbumPage({super.key, required this.album});
 
   final ItemEntity album;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = useScrollController();
-    final titleOpacity = useState<double>(0);
-    final currentSong = useState<MediaItem?>(null);
-    final titleKey = GlobalKey(debugLabel: 'title');
+  ConsumerState createState() => _AlbumPageState();
+}
 
-    final imageService = useState<ImageService>(ImageService(serverUrl: ref.read(baseUrlProvider.notifier).state!));
+class _AlbumPageState extends ConsumerState<AlbumPage> {
+  final scrollController = ScrollController();
+  final titleOpacity = ValueNotifier<double>(0);
+  late ValueNotifier<MediaItem?> currentSong;
+  final titleKey = GlobalKey(debugLabel: 'title');
+  late final ImageService imageService;
 
-    ThemeData theme = Theme.of(context);
-    Size screenSize = MediaQuery.sizeOf(context);
+  late ThemeData theme;
+  late Size screenSize;
+  late bool isMobile;
+  late bool isDesktop;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentSong = ValueNotifier<MediaItem?>(null);
+
+    imageService = ImageService(serverUrl: ref.read(baseUrlProvider.notifier).state!);
+    scrollController.addListener(onScroll);
+    createColorScheme();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    theme = Theme.of(context);
+    screenSize = MediaQuery.sizeOf(context);
     final deviceType = getDeviceType(screenSize);
-    bool isMobile = deviceType == DeviceScreenType.mobile;
-    bool isDesktop = deviceType == DeviceScreenType.desktop;
+    isMobile = deviceType == DeviceScreenType.mobile;
+    isDesktop = deviceType == DeviceScreenType.desktop;
+  }
 
-    void onScroll() {
-      final titleContext = titleKey.currentContext;
+  void onScroll() {
+    final titleContext = titleKey.currentContext;
 
-      if (titleContext?.mounted ?? false) {
-        final scrollPosition = scrollController.position;
-        final scrollableContext = scrollPosition.context.notificationContext!;
-        final scrollableRenderBox = scrollableContext.findRenderObject()! as RenderBox;
-        final titleRenderBox = titleContext!.findRenderObject()! as RenderBox;
-        final titlePosition = titleRenderBox.localToGlobal(
-          Offset.zero,
-          ancestor: scrollableRenderBox,
-        );
-        final titleHeight = titleContext.size!.height;
-        final visibleFraction = (titlePosition.dy + titleHeight) / titleHeight;
+    if (titleContext?.mounted ?? false) {
+      final scrollPosition = scrollController.position;
+      final scrollableContext = scrollPosition.context.notificationContext!;
+      final scrollableRenderBox = scrollableContext.findRenderObject()! as RenderBox;
+      final titleRenderBox = titleContext!.findRenderObject()! as RenderBox;
+      final titlePosition = titleRenderBox.localToGlobal(
+        Offset.zero,
+        ancestor: scrollableRenderBox,
+      );
+      final titleHeight = titleContext.size!.height;
+      final visibleFraction = (titlePosition.dy + titleHeight) / titleHeight;
 
-        titleOpacity.value = 1 - min(max(visibleFraction, 0), 1);
-      }
+      titleOpacity.value = 1 - min(max(visibleFraction, 0), 1);
     }
+  }
 
-    createColorScheme() {
-      ref.read(playerProvider).sequenceStateStream.listen((event) {
-        if (event != null) {
-          if (context.mounted) {
-            currentSong.value = event.sequence[event.currentIndex].tag as MediaItem;
-            ref.read(imageSchemeProvider.notifier).state = imageService.value.albumIP(
-              id: album.id,
-              tagId: album.imageTags['Primary'],
-            );
-          }
+  createColorScheme() {
+    ref.read(playerProvider).sequenceStateStream.listen((event) {
+      if (event != null) {
+        if (mounted) {
+          currentSong.value = event.sequence[event.currentIndex].tag as MediaItem;
+          ref.read(imageSchemeProvider.notifier).state = imageService.albumIP(
+            id: widget.album.id,
+            tagId: widget.album.imageTags['Primary'],
+          );
         }
-      });
-    }
+      }
+    });
+  }
 
+  Widget albumDetails({
+    required Duration duration,
+    required int soundsCount,
+    int? year,
+    String? albumArtist,
+    Widget divider = const SizedBox.shrink(),
+  }) {
+    final durationInSeconds = duration.inSeconds;
+    final hours = durationInSeconds ~/ Duration.secondsPerHour;
+    final minutes = (durationInSeconds - hours * Duration.secondsPerHour) ~/ Duration.secondsPerMinute;
+    final seconds = durationInSeconds % Duration.secondsPerMinute;
+
+    return DefaultTextStyle(
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        height: 1.2,
+      ),
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(right: 6),
+            child: Icon(JPlayer.clock, size: 14),
+          ),
+          Text(
+            [
+              if (hours > 0) hours.toString().padLeft(2, '0'),
+              minutes.toString().padLeft(2, '0'),
+              seconds.toString().padLeft(2, '0'),
+            ].join(':'),
+          ),
+          divider,
+          const Padding(
+            padding: EdgeInsets.only(right: 6),
+            child: Icon(JPlayer.music, size: 14),
+          ),
+          Text('$soundsCount songs'),
+          if (year != null) ...[
+            divider,
+            Text(
+              year.toString(),
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final songs = useState<List<SongsEntity>>([]);
 
+    ImageProvider albumCover() => imageService.albumIP(id: widget.album.id, tagId: widget.album.imageTags['Primary']);
     void getSongs() {
-      ref.read(jellyfinApiProvider).getSongs(userId: ref.read(currentUserProvider)!, albumId: album.id).then((value) {
+      ref
+          .read(jellyfinApiProvider)
+          .getSongs(userId: ref.read(currentUserProvider)!, albumId: widget.album.id)
+          .then((value) {
         final items = [...value.items]..sort((a, b) => a.indexNumber.compareTo(b.indexNumber));
         songs.value = items;
       });
     }
 
-    ImageProvider albumCover() => imageService.value.albumIP(id: album.id, tagId: album.imageTags['Primary']);
-
     useEffect(() {
-      createColorScheme();
-      Future.microtask(() => getSongs());
       scrollController.addListener(onScroll);
+      Future.microtask(() => getSongs());
       return null;
     }, []);
-
-    Widget albumDetails({
-      required Duration duration,
-      required int soundsCount,
-      int? year,
-      String? albumArtist,
-      Widget divider = const SizedBox.shrink(),
-    }) {
-      final durationInSeconds = duration.inSeconds;
-      final hours = durationInSeconds ~/ Duration.secondsPerHour;
-      final minutes = (durationInSeconds - hours * Duration.secondsPerHour) ~/ Duration.secondsPerMinute;
-      final seconds = durationInSeconds % Duration.secondsPerMinute;
-
-      return DefaultTextStyle(
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          height: 1.2,
-        ),
-        child: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 6),
-              child: Icon(JPlayer.clock, size: 14),
-            ),
-            Text(
-              [
-                if (hours > 0) hours.toString().padLeft(2, '0'),
-                minutes.toString().padLeft(2, '0'),
-                seconds.toString().padLeft(2, '0'),
-              ].join(':'),
-            ),
-            divider,
-            const Padding(
-              padding: EdgeInsets.only(right: 6),
-              child: Icon(JPlayer.music, size: 14),
-            ),
-            Text('$soundsCount songs'),
-            if (year != null) ...[
-              divider,
-              Text(
-                year.toString(),
-                style: const TextStyle(fontWeight: FontWeight.normal),
-              ),
-            ],
-          ],
-        ),
-      );
-    }
 
     return Scaffold(
       body: GradientBackground(
@@ -221,11 +247,11 @@ class AlbumPage extends HookConsumerWidget {
                     ),
                   ),
                   child: Text(
-                    album.name,
+                    widget.album.name,
                     overflow: TextOverflow.clip,
                     style: TextStyle(
-                      fontSize: isMobile ? 14 : 20,
-                      color: theme.colorScheme.onPrimary,
+                      fontSize: isMobile ? 16 : 22,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
                 ),
@@ -263,7 +289,7 @@ class AlbumPage extends HookConsumerWidget {
                                           children: [
                                             Flexible(
                                               child: Text(
-                                                album.name,
+                                                widget.album.name,
                                                 key: titleKey,
                                                 style: TextStyle(
                                                   fontSize: isMobile ? 18 : 32,
@@ -274,14 +300,14 @@ class AlbumPage extends HookConsumerWidget {
                                             ),
                                           ],
                                         ),
-                                        Text(album.albumArtist ?? ''),
+                                        Text(widget.album.albumArtist ?? ''),
                                         Row(
                                           children: [
                                             albumDetails(
-                                              duration: album.duration,
+                                              duration: widget.album.duration,
                                               soundsCount: songs.value.length,
                                               albumArtist: songs.value.isNotEmpty ? songs.value.first.albumArtist : '',
-                                              year: album.productionYear,
+                                              year: widget.album.productionYear,
                                               divider: Padding(
                                                 padding: const EdgeInsets.symmetric(horizontal: 10),
                                                 child: Offstage(
@@ -305,7 +331,7 @@ class AlbumPage extends HookConsumerWidget {
                                           IconButton(
                                             onPressed: () {},
                                             icon: const Icon(JPlayer.download),
-                                          ) ,
+                                          ),
                                           //todo: random queue button
                                           // const RandomQueueButton(),
                                           SizedBox.square(
@@ -354,7 +380,7 @@ class AlbumPage extends HookConsumerWidget {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        album.name,
+                                        widget.album.name,
                                         key: titleKey,
                                         style: TextStyle(
                                           fontSize: isMobile ? 18 : 32,
@@ -365,15 +391,15 @@ class AlbumPage extends HookConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                Text(album.albumArtist ?? ''),
+                                Text(widget.album.albumArtist ?? ''),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     albumDetails(
-                                      duration: album.duration,
+                                      duration: widget.album.duration,
                                       soundsCount: songs.value.length,
                                       albumArtist: songs.value.isNotEmpty ? songs.value.first.albumArtist : '',
-                                      year: album.productionYear,
+                                      year: widget.album.productionYear,
                                       divider: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 10),
                                         child: Offstage(
@@ -390,12 +416,24 @@ class AlbumPage extends HookConsumerWidget {
                                         // const RandomQueueButton(),
                                         SizedBox.square(
                                           dimension: isMobile ? 38 : 48,
-                                          child:PlayButton(
-                                            onPressed: () {
-                                              print('cac');
-                                              ref.read(playbackNotifierProvider.notifier).play(songs.value[0], songs.value, album);
-                                            },
-                                          ),
+                                          // child:PlayButton(
+                                          //   onPressed: () {
+                                          //     ref.read(playbackNotifierProvider.notifier).play(songs.value[0], songs.value, widget.album);
+                                          //   },
+                                          // ),
+                                          child: Consumer(builder: (context, ref, child) {
+                                            final playbackStatus =
+                                                ref.watch(playbackNotifierProvider.select((value) => value.status));
+                                            final stateNotifier =
+                                                ValueNotifier<bool>(playbackStatus == PlaybackStatus.playing);
+                                            return PlayPauseButton(
+                                                onPressed: () => playbackStatus == PlaybackStatus.playing || playbackStatus == PlaybackStatus.paused
+                                                    ? ref.read(playbackNotifierProvider.notifier).playPause()
+                                                    : ref
+                                                        .read(playbackNotifierProvider.notifier)
+                                                        .play(songs.value[0], songs.value, widget.album),
+                                                stateNotifier: stateNotifier);
+                                          }),
                                         ),
                                       ],
                                     ),
@@ -408,22 +446,21 @@ class AlbumPage extends HookConsumerWidget {
                       ),
                     ],
                     SliverList.builder(
-                      itemCount: songs.value.length,
+                        itemCount: songs.value.length,
                         itemBuilder: (context, index) => ValueListenableBuilder(
-                            valueListenable: currentSong,
-                            builder: (context, item, other){
-                              SongsEntity song = songs.value[index];
-                              return PlayerSongView(song: song, position: index + 1,
-                                isPlaying: item != null && song.id == item.id,
-                                onTap: () {
-                                  ref.read(playbackNotifierProvider.notifier).play(song, songs.value, album);
-                                },
-                                //todo: add favorite
-
-                              );
-                            },
-                        )
-                    ),
+                              valueListenable: currentSong,
+                              builder: (context, item, other) {
+                                SongsEntity song = songs.value[index];
+                                return PlayerSongView(
+                                  song: song, position: index + 1,
+                                  isPlaying: item != null && song.id == item.id,
+                                  onTap: () {
+                                    ref.read(playbackNotifierProvider.notifier).play(song, songs.value, widget.album);
+                                  },
+                                  //todo: add favorite
+                                );
+                              },
+                            )),
                   ],
                 ),
               )),

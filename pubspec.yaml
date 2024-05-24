@@ -45,6 +45,8 @@ dependencies:
   just_audio_background: ^0.0.1-beta.12
   audio_service: ^0.18.13
   font_awesome_flutter: ^10.7.0
+  animated_bottom_navigation_bar: ^1.2.0
+  salomon_bottom_bar: ^3.3.2
 
 
 

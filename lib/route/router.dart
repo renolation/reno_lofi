@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reno_music/presentations/pages/search_page.dart';
 import '../presentations/pages/albums_page.dart';
 import '../presentations/pages/home_page.dart';
 import '../presentations/pages/login_page.dart';
@@ -24,10 +25,7 @@ GoRouter router(RouterRef ref) {
 
   ref
     ..onDispose(isAuth.dispose) // don't forget to clean after yourselves (:
-    // update the listenable, when some provider value changes
-    // here, we are just interested in wheter the user's logged in
     ..listen(
-
       authControllerProvider.select((value) => value.whenData((value) => value.isAuth)),
       (_, next) {
         isAuth.value = next;
@@ -90,6 +88,13 @@ GoRouter router(RouterRef ref) {
               ]),
               StatefulShellBranch(routes: <RouteBase>[
                 GoRoute(
+                  path: Routes.search,
+                  name: Routes.search.name,
+                  builder: (context, state) => const SearchPage(),
+                ),
+              ]),
+              StatefulShellBranch(routes: <RouteBase>[
+                GoRoute(
                   path: Routes.settings,
                   name: Routes.settings.name,
                   builder: (context, state) => const SettingsPage(),
@@ -98,7 +103,7 @@ GoRouter router(RouterRef ref) {
             ]),
       ],
       redirect: (context, state) {
-        print(isAuth.value);
+
         if (isAuth.value.unwrapPrevious().hasError) return Routes.login;
         if (isAuth.value.isLoading || !isAuth.value.hasValue) return Routes.splash;
 
