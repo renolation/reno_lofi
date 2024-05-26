@@ -6,7 +6,7 @@ import '../repositories/jellyfin_api.dart';
 part 'current_album_controller.g.dart';
 
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CurrentAlbumController extends _$CurrentAlbumController {
 
   late final JellyfinApi _api;

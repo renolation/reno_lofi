@@ -104,3 +104,7 @@ class AudioQueueNotifier extends _$AudioQueueNotifier {
 }
 
 // final audioQueueProvider = StateNotifierProvider<AudioQueueNotifier, AudioQueueState>((ref) => AudioQueueNotifier());
+
+final currentSongProvider = StateProvider<SongsEntity?>((ref) {
+  return null;
+});

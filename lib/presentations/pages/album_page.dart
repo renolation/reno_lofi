@@ -121,6 +121,14 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
     isDesktop = deviceType == DeviceScreenType.desktop;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+    titleOpacity.dispose();
+    currentSong.dispose();
+  }
+
   void onScroll() {
     final titleContext = titleKey.currentContext;
 
