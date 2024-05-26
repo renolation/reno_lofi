@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:reno_music/presentations/views/player_song_view.dart';
 import 'package:reno_music/presentations/widgets/play_pause_button.dart';
 import 'package:reno_music/state/auth_controller.dart';
@@ -422,27 +423,29 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                                         // _downloadAlbumButton(),
                                         //todo: random button
                                         // const RandomQueueButton(),
-                                        SizedBox.square(
-                                          dimension: isMobile ? 38 : 48,
-                                          // child:PlayButton(
-                                          //   onPressed: () {
-                                          //     ref.read(playbackNotifierProvider.notifier).play(songs.value[0], songs.value, widget.album);
-                                          //   },
-                                          // ),
-                                          child: Consumer(builder: (context, ref, child) {
-                                            final playbackStatus =
+
+                                        Consumer(builder: (context, ref, child) {
+
+                                          return SizedBox.square(
+                                            dimension: isMobile ? 38 : 48,
+                                            child: StreamBuilder<SequenceState?>(
+                                              stream: ref.read(playerProvider).sequenceStateStream,
+                                              builder: (context, snapshot){
+                                                final playbackStatus =
                                                 ref.watch(playbackNotifierProvider.select((value) => value.status));
-                                            final stateNotifier =
-                                                ValueNotifier<bool>(playbackStatus == PlaybackStatus.playing);
-                                            return PlayPauseButton(
-                                                onPressed: () => playbackStatus == PlaybackStatus.playing || playbackStatus == PlaybackStatus.paused
-                                                    ? ref.read(playbackNotifierProvider.notifier).playPause()
-                                                    : ref
+                                                final stateNotifier = ref.read(playPauseProvider.notifier).state;
+                                                return PlayPauseButton(
+                                                    onPressed: () => playbackStatus == PlaybackStatus.playing ||
+                                                        playbackStatus == PlaybackStatus.paused
+                                                        ? ref.read(playbackNotifierProvider.notifier).playPause()
+                                                        : ref
                                                         .read(playbackNotifierProvider.notifier)
                                                         .play(songs.value[0], songs.value, widget.album),
-                                                stateNotifier: stateNotifier);
-                                          }),
-                                        ),
+                                                    stateNotifier: stateNotifier);
+                                              },
+                                            ),
+                                          );
+                                        }),
                                       ],
                                     ),
                                   ],

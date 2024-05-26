@@ -32,7 +32,6 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> with SingleTickerPr
   late final AnimationController animationController;
 
   final _playProgress = ValueNotifier<double>(0.6);
-  final _isPlaying = ValueNotifier<bool>(false);
   final _randomQueue = ValueNotifier<bool>(false);
   final _repeatTrack = ValueNotifier<bool>(false);
   final _likeTrack = ValueNotifier<bool>(false);
@@ -224,7 +223,6 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> with SingleTickerPr
     _imageProvider.dispose();
     _dynamicColors.dispose();
     _playProgress.dispose();
-    _isPlaying.dispose();
     _randomQueue.dispose();
     _repeatTrack.dispose();
     _likeTrack.dispose();
@@ -238,7 +236,7 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> with SingleTickerPr
     SongsEntity? currentSong;
 
     final playbackProvider = ref.watch(playbackNotifierProvider);
-    _isPlaying.value = playbackProvider.status == PlaybackStatus.playing;
+    ref.read(playPauseProvider.notifier).state.value = playbackProvider.status == PlaybackStatus.playing;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -292,6 +290,7 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> with SingleTickerPr
                       children: [
                         // if (_isDesktop) const RemainingDuration(),
                         // if (_isDesktop) const RandomQueueButton(),
+
                         _prevTrackButton(),
                         SizedBox.square(
                           dimension: 45,
@@ -320,12 +319,12 @@ class _BottomPlayerState extends ConsumerState<BottomPlayer> with SingleTickerPr
   }
 
   Widget _playPauseButton() => PlayPauseButton(
-        onPressed: () => _isPlaying.value
+        onPressed: () => ref.read(playPauseProvider.notifier).state.value
             ? ref.read(playbackNotifierProvider.notifier).pause()
             : ref.read(playbackNotifierProvider.notifier).resume(),
         background: _theme.colorScheme.onPrimary,
         foreground: _theme.colorScheme.secondary,
-        stateNotifier: _isPlaying,
+        stateNotifier: ref.read(playPauseProvider.notifier).state,
       );
 
   Widget _prevTrackButton() => IconButton(

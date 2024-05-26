@@ -54,6 +54,7 @@ class HomePage extends ConsumerWidget {
     });
 
     return ScrollablePageScaffold(
+      useGradientBackground: true,
       navigationBar: PreferredSize(
         preferredSize: Size.fromHeight(isMobile ? 48 : 100),
         child: Padding(

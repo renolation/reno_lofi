@@ -64,7 +64,7 @@ class MyApp extends ConsumerWidget {
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.purple,
+          seedColor: Colors.blueAccent,
           // ···
           brightness: Brightness.dark,
         ),
